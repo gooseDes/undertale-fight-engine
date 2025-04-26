@@ -23,7 +23,7 @@ var field = new Field(canvas);
 var soul = new Soul(canvas, keys, field);
 var particles = [];
 for (let i = 0; i < 10; i++) {
-  particles.push(new Particle(canvas, 'bg', Math.random()*10+25, 10, width/10*i + Math.random()*width/10, height + Math.random() * height/10))
+  particles.push(new Particle(canvas, 'bg', Math.random()*10+25, width*(0.005+Math.random()*0.005), width/10*i + Math.random()*width/10, height + Math.random() * height/10))
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
