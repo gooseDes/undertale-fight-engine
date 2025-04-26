@@ -14,12 +14,12 @@ export class Character {
     }
 
     update(dt) {
-        this.face.x = this.x - this.face.width/2;
-        this.body.x = this.x - this.face.width/2;
-        this.legs.x = this.x - this.face.width/2;
-        this.face.y = this.y;
-        this.body.y = this.y+this.face.height;
-        this.legs.y = this.y+this.face.height+this.legs.height;
+        this.face.x = this.x - this.face.width/2 + Math.sin(performance.now()*0.001)*this.w*0.005;
+        this.body.x = this.x - this.face.width/2 - Math.sin(performance.now()*0.001)*this.w*0.003;
+        this.legs.x = this.x - this.face.width/2 - Math.cos(performance.now()*0.001)*this.w*0.002;
+        this.face.y = this.y + Math.cos(performance.now()*0.002)*this.h*0.005;
+        this.body.y = this.y + this.face.height;
+        this.legs.y = this.y + this.face.height+this.legs.height;
     }
 
     draw() {
