@@ -33,6 +33,11 @@ const totskiy_face = new Sprite(canvas, "assets/images/totskiy_face.png", width*
 const totskiy_body = new Sprite(canvas, "assets/images/totskiy_body.png", width*0.1, height*0.1, 10, 60);
 const totskiy_legs = new Sprite(canvas, "assets/images/totskiy_legs.png", width*0.1, height*0.1, 10, 125);
 
+const fight_button = new Sprite(canvas, "assets/images/fight.png", width*0.15, height*0.1, width*0.05, height*0.85);
+const act_button = new Sprite(canvas, "assets/images/act.png", width*0.15, height*0.1, width*0.3, height*0.85);
+const item_button = new Sprite(canvas, "assets/images/item.png", width*0.15, height*0.1, width*0.55, height*0.85);
+const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width*0.15, height*0.1, width*0.8, height*0.85);
+
 var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width*0.1, height*0.1, width/2, height*0.1);
 
 let lastTime = performance.now();
@@ -61,6 +66,11 @@ function update(currentTime) {
 
     totskiy.update();
     totskiy.draw();
+
+    fight_button.draw();
+    act_button.draw();
+    item_button.draw();
+    mercy_button.draw();
 }
 
 update();
