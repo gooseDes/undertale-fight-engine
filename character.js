@@ -19,7 +19,7 @@ export class Character {
         this.legs.x = this.x - this.face.width/2 - Math.cos(performance.now()*0.001)*this.w*0.002;
         this.face.y = this.y + Math.cos(performance.now()*0.002)*this.h*0.005;
         this.body.y = this.y + this.face.height;
-        this.legs.y = this.y + this.face.height+this.legs.height;
+        this.legs.y = this.y + this.face.height + this.legs.height;
     }
 
     draw() {
