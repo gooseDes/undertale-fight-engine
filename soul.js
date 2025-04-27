@@ -1,5 +1,5 @@
 export class Soul {
-    constructor(canvas, keys, field) {
+    constructor(canvas, keys, joystick, field) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.w = canvas.clientWidth;
@@ -25,6 +25,10 @@ export class Soul {
         [0,0,0,1,1,0,0,0],
         [0,0,0,0,0,0,0,0]
         ];
+        
+        if (joystick) {
+          
+        }
     }
 
     update(dt) {
