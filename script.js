@@ -11,6 +11,21 @@ const width = canvas.width = content.clientWidth;
 const height = canvas.height = content.clientHeight;
 const keys = {};
 
+const joystick = nipplejs.create({
+  zone: document.getElementById('joystick-zone'),
+  mode: "static",
+  position: { left: "10svh", bottom: "10svh" },
+  color: "white",
+});
+
+document.addEventListener("touchstart", (e) => {
+  document.documentElement.requestFullscreen();
+});
+
+document.addEventListener("click", (e) => {
+  document.documentElement.requestFullscreen();
+});
+
 document.addEventListener("keydown", (e) => {
   keys[e.code] = true;
 });
@@ -20,7 +35,7 @@ document.addEventListener("keyup", (e) => {
 });
 
 var field = new Field(canvas);
-var soul = new Soul(canvas, keys, field);
+var soul = new Soul(canvas, keys, joystick, field);
 var particles = [];
 for (let i = 0; i < 10; i++) {
   particles.push(new Particle(canvas, 'bg', Math.random()*10+25, width*(0.005+Math.random()*0.005), width/10*i + Math.random()*width/10, height + Math.random() * height/10))
@@ -64,7 +79,7 @@ function update(currentTime) {
     field.update(dt);
     field.draw();
 
-    totskiy.update();
+    totskiy.update(dt);
     totskiy.draw();
 
     fight_button.draw();
