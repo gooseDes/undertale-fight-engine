@@ -14,6 +14,7 @@ export class Soul {
         this.height = this.size*10;
         this.oldFieldOffsetX = this.field.offsetX;
         this.oldFieldOffsetY = this.field.offsetY;
+        this.joystickAngle = null;
 
         this.heart = [
         [0,1,1,0,0,1,1,0],
@@ -27,13 +28,22 @@ export class Soul {
         ];
         
         if (joystick) {
-          
+          joystick.on('move', (evt, data) => {
+            this.joystickAngle = data.angle.radian;
+          });
+          joystick.on('end', (evt, data) => {
+            this.joystickAngle = null;
+          })
         }
     }
 
+    kill() {
+        location.reload();
+    }
+
     update(dt) {
-        this.width = this.size*10;
-        this.height = this.size*10;
+        this.width = this.size*9;
+        this.height = this.size*9;
 
         if (this.oldFieldOffsetX != this.field.offsetX) {
             this.x += this.field.offsetX - this.oldFieldOffsetX;
@@ -57,6 +67,18 @@ export class Soul {
         if (this.keys['KeyD']) {
             this.x += this.speed*dt;
         }
+
+        if (this.joystickAngle) {
+            this.x += Math.cos(this.joystickAngle) * this.speed * dt;
+            this.y -= Math.sin(this.joystickAngle) * this.speed * dt;
+        }
+
+        this.field.enemies.forEach(enemy => {
+            if ((this.x+this.width >= enemy.x && this.x <= enemy.x+enemy.width) && (this.y+this.height >= enemy.y && this.y <= enemy.y+enemy.height) ) {
+                this.kill();
+            }
+        });
+
         if (this.x >= (this.w/2 + this.field.width/2 - this.width + this.field.offsetX)) {
             this.x = this.w/2 + this.field.width/2 - this.width + this.field.offsetX;
         }
@@ -76,7 +98,7 @@ export class Soul {
         for (let y = 0; y < this.heart.length; y++) {
             for (let x = 0; x < this.heart[y].length; x++) {
                 if (this.heart[y][x]) {
-                    this.ctx.fillRect(x * this.size + this.x, y * this.size + this.y, this.size, this.size);
+                    this.ctx.fillRect(x * this.size + this.x, y * this.size + this.y, this.size+1, this.size+1);
                 }
             }
         }

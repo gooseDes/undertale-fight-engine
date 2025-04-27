@@ -10,6 +10,12 @@ export class Field {
         this.lineWidth = this.w * 0.01;
         this.offsetX = 0;
         this.offsetY = 0;
+        this.enemies = [];
+    }
+
+    addEnemy(enemy) {
+        this.enemies.push(enemy);
+        enemy.field = this;
     }
 
     update(dt) {

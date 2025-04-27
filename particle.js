@@ -24,7 +24,7 @@ export class Particle {
             if (this.alpha <= 0) {
                 this.x = this.startX;
                 this.y = this.startY;
-                this.alpha = 4;
+                this.alpha = this.w*0.005;
             }
         }
     }
