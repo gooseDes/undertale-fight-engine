@@ -23,3 +23,10 @@ body {
     overflow: hidden;
     background: linear-gradient(0deg, rgb(82, 6, 6), black, black, black, black, black, black, black, black);
 }
+
+#joystick-zone {
+  width: 5svh;
+  height: 5svh;
+  left: 2svh;
+  bottom: 2svh;
+}
