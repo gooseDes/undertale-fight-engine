@@ -27,8 +27,22 @@ window.addEventListener('resize', (e) => {
   location.reload();
 })
 
+function reloadPageAndStayFullscreen() {
+  if (document.fullscreenElement) {
+    const currentFullscreenElement = document.fullscreenElement;
+    location.reload();
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement !== currentFullscreenElement) {
+        document.documentElement.requestFullscreen();
+      }
+    });
+  } else {
+    location.reload();
+  }
+}
+
 document.addEventListener("touchstart", (e) => {
-  document.documentElement.requestFullscreen();
+  reloadPageAndStayFullscreen();
 });
 
 document.addEventListener("click", (e) => {
