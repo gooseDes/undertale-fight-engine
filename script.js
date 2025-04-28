@@ -31,7 +31,7 @@ if (localStorage.getItem('wasFullscreen') === 'true') {
 }
 
 window.addEventListener('resize', (e) => {
-  reloadPageAndStayFullscreen();
+  //reloadPageAndStayFullscreen();
 });
 
 function reloadPageAndStayFullscreen() {
