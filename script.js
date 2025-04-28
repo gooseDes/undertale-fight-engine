@@ -12,7 +12,7 @@ const width = canvas.width = content.clientWidth;
 const height = canvas.height = content.clientHeight;
 const keys = {};
 
-var joystick = null
+var joystick = null;
 
 if ('ontouchstart' in window) {
   joystick = nipplejs.create({
@@ -23,22 +23,22 @@ if ('ontouchstart' in window) {
   });
 }
 
+if (localStorage.getItem('wasFullscreen') === 'true') {
+  document.documentElement.requestFullscreen().catch((err) => {
+    console.warn("Can't open fullscreen", err);
+  });
+  localStorage.removeItem('wasFullscreen');
+}
+
 window.addEventListener('resize', (e) => {
-  location.reload();
-})
+  reloadPageAndStayFullscreen();
+});
 
 function reloadPageAndStayFullscreen() {
   if (document.fullscreenElement) {
-    const currentFullscreenElement = document.fullscreenElement;
-    location.reload();
-    document.addEventListener('fullscreenchange', () => {
-      if (document.fullscreenElement !== currentFullscreenElement) {
-        document.documentElement.requestFullscreen();
-      }
-    });
-  } else {
-    location.reload();
+    localStorage.setItem('wasFullscreen', 'true');
   }
+  location.reload();
 }
 
 document.addEventListener("touchstart", (e) => {
@@ -46,7 +46,9 @@ document.addEventListener("touchstart", (e) => {
 });
 
 document.addEventListener("click", (e) => {
-  document.documentElement.requestFullscreen();
+  document.documentElement.requestFullscreen().catch((err) => {
+    console.warn('Не удалось войти в fullscreen при клике:', err);
+  });
 });
 
 document.addEventListener("keydown", (e) => {
@@ -61,61 +63,59 @@ var field = new Field(canvas);
 var soul = new Soul(canvas, keys, joystick, field);
 var particles = [];
 for (let i = 0; i < 15; i++) {
-  particles.push(new Particle(canvas, 'bg', Math.random()*10+25, width*(0.005+Math.random()*0.005), width/15*i + Math.random()*width/10, height + Math.random() * height/10))
+  particles.push(new Particle(canvas, 'bg', Math.random() * 10 + 25, width * (0.005 + Math.random() * 0.005), width / 15 * i + Math.random() * width / 10, height + Math.random() * height / 10));
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
-field.offsetY = height*0.1;
+field.offsetY = height * 0.1;
 
-const totskiy_face = new Sprite(canvas, "assets/images/totskiy_face.png", width*0.1, height*0.1, 10, 10);
-const totskiy_body = new Sprite(canvas, "assets/images/totskiy_body.png", width*0.1, height*0.1, 10, 60);
-const totskiy_legs = new Sprite(canvas, "assets/images/totskiy_legs.png", width*0.1, height*0.1, 10, 125);
+const totskiy_face = new Sprite(canvas, "assets/images/totskiy_face.png", width * 0.1, height * 0.1, 10, 10);
+const totskiy_body = new Sprite(canvas, "assets/images/totskiy_body.png", width * 0.1, height * 0.1, 10, 60);
+const totskiy_legs = new Sprite(canvas, "assets/images/totskiy_legs.png", width * 0.1, height * 0.1, 10, 125);
 
-const fight_button = new Sprite(canvas, "assets/images/fight.png", width*0.15, height*0.1, width*0.05, height*0.85);
-const act_button = new Sprite(canvas, "assets/images/act.png", width*0.15, height*0.1, width*0.3, height*0.85);
-const item_button = new Sprite(canvas, "assets/images/item.png", width*0.15, height*0.1, width*0.55, height*0.85);
-const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width*0.15, height*0.1, width*0.8, height*0.85);
+const fight_button = new Sprite(canvas, "assets/images/fight.png", width * 0.15, height * 0.1, width * 0.05, height * 0.85);
+const act_button = new Sprite(canvas, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
+const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
+const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
 
-var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width*0.1, height*0.1, width/2, height*0.1);
+var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.1);
 
-var enemy = new Enemy(canvas, 'bone', width, height/2, width*0.01, height*0.5);
+var enemy = new Enemy(canvas, 'bone', width, height / 2, width * 0.01, height * 0.5);
 enemy.setMovement(-0.1, 0);
 field.addEnemy(enemy);
 
 let lastTime = performance.now();
 
 function update(currentTime) {
-    const dt = (currentTime - lastTime) / 1000;
-    lastTime = currentTime;
-    requestAnimationFrame(update);
+  const dt = (currentTime - lastTime) / 1000;
+  lastTime = currentTime;
+  requestAnimationFrame(update);
 
-    if (!dt) return;
+  if (!dt) return;
 
-    //ctx.fillStyle = 'black';
-    //ctx.fillRect(0, 0, width, height);
-    ctx.clearRect(0, 0, width, height);
+  ctx.clearRect(0, 0, width, height);
 
-    particles.forEach((particle) => {
-      particle.update(dt);
-      particle.draw();
-    })
+  particles.forEach((particle) => {
+    particle.update(dt);
+    particle.draw();
+  });
 
-    soul.update(dt);
-    soul.draw();
+  soul.update(dt);
+  soul.draw();
 
-    field.update(dt);
-    field.draw();
+  field.update(dt);
+  field.draw();
 
-    totskiy.update(dt);
-    totskiy.draw();
+  totskiy.update(dt);
+  totskiy.draw();
 
-    enemy.update(dt);
-    enemy.draw();
+  enemy.update(dt);
+  enemy.draw();
 
-    fight_button.draw();
-    act_button.draw();
-    item_button.draw();
-    mercy_button.draw();
+  fight_button.draw();
+  act_button.draw();
+  item_button.draw();
+  mercy_button.draw();
 }
 
 update();
