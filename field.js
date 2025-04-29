@@ -59,7 +59,8 @@ export class Field {
         switch (this.action) {
             case 0:
                 this.sinceDodgingStarted += dt;
-                this.currentOffsetX = Math.sin(this.sinceDodgingStarted*0.5) * this.w * 0.1
+                this.currentOffsetX = Math.sin(this.sinceDodgingStarted) * this.w * 0.1
+                this.currentOffsetY = Math.cos(this.sinceDodgingStarted*1.1) * this.h * 0.1
                 break;
             default:
                 this.sinceDodgingStarted = 0;
