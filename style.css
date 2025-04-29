@@ -61,3 +61,16 @@ body {
   top: 2svh;
   font-family: 'Press Start 2P';
 }
+
+#confirm-btn {
+    position: absolute;
+    color: #fff;
+    font-size: 2svh;
+    right: 5svh;
+    bottom: 5svh;
+    background-color: rgb(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 2svh;
+    width: 5svh;
+    aspect-ratio: 1/1;
+}
