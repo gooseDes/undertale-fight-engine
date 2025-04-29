@@ -12,6 +12,8 @@ export class Enemy {
         this.speedX = 0;
         this.speedY = 0;
         this.field = null;
+        this.oldFieldOffsetX = 0;
+        this.oldFieldOffsetY = 0;
     }
 
     setMovement(x, y) {
@@ -20,6 +22,16 @@ export class Enemy {
     }
 
     update(dt) {
+        if (this.oldFieldOffsetX != this.field.currentOffsetX) {
+            this.x += this.field.currentOffsetX - this.oldFieldOffsetX;
+        }
+        if (this.oldFieldOffsetY != this.field.currentOffsetY) {
+            this.y += this.field.currentOffsetY - this.oldFieldOffsetY;
+        }
+
+        this.oldFieldOffsetX = this.field.currentOffsetX;
+        this.oldFieldOffsetY = this.field.currentOffsetY;
+        
         this.x += this.speedX * dt * this.w;
         this.y += this.speedY * dt * this.w;
     }

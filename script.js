@@ -18,7 +18,7 @@ if ('ontouchstart' in window) {
   joystick = nipplejs.create({
     zone: document.getElementById('joystick-zone'),
     mode: "static",
-    position: { left: "10svh", bottom: "10svh" },
+    position: { left: "12svh", bottom: "12svh" },
     color: "linear-gradient(135deg, #ff0000, #ff7700)",
   });
 }
@@ -40,6 +40,7 @@ for (let i = 0; i < 15; i++) {
 soul.x = width * 0.5;
 soul.y = height * 0.6;
 field.offsetY = height * 0.1;
+field.addSoul(soul);
 
 const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.006);
 const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
@@ -51,10 +52,6 @@ const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, h
 const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
 
 var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
-
-var enemy = new Enemy(canvas, 'bone', width, height / 2, width * 0.01, height * 0.5);
-enemy.setMovement(-0.1, 0);
-field.addEnemy(enemy);
 
 let lastTime = performance.now();
 
@@ -72,22 +69,19 @@ function update(currentTime) {
     particle.draw();
   });
 
-  soul.update(dt);
-  soul.draw();
-
-  field.update(dt);
-  field.draw();
-
   totskiy.update(dt);
   totskiy.draw();
-
-  enemy.update(dt);
-  enemy.draw();
 
   fight_button.draw();
   act_button.draw();
   item_button.draw();
   mercy_button.draw();
+
+  field.update(dt);
+  field.draw();
+
+  soul.update(dt);
+  soul.draw();
 }
 
 update();

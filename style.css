@@ -52,3 +52,12 @@ body {
   scale: 1.1;
   filter: none;
 }
+
+#hp-bar {
+  position: absolute;
+  color: #fff;
+  font-size: 2svh;
+  left: 5svh;
+  top: 2svh;
+  font-family: 'Press Start 2P';
+}
