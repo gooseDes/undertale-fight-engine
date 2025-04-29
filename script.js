@@ -42,6 +42,10 @@ soul.y = height * 0.6;
 field.offsetY = height * 0.1;
 field.addSoul(soul);
 
+document.getElementById('confirm-btn').addEventListener('click', () => {
+    soul.confirmSelection();
+});
+
 const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
 const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
 const totskiy_legs = new Sprite(canvas, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
