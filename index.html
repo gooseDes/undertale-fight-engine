@@ -5,13 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="style.css">
     <title>UnderTotskiy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <script src="https://unpkg.com/nipplejs@0.8.2/dist/nipplejs.js"></script>
     <div id="content">
         <canvas id="canvas"></canvas>
         <div id="joystick-zone"></div>
+        <button id="play-button">Play</button>
     </div>
-    <script type="module" src="script.js"></script>
+    <script>
+        const play_button = document.getElementById('play-button');
+        play_button.addEventListener('click', () => {
+            document.documentElement.requestFullscreen().then(() => {
+                play_button.style.display = 'none';
+                const script = document.createElement('script');
+                script.src = "script.js";
+                script.type = "module";
+                script.async = true;
+                document.body.appendChild(script);
+            });
+        });
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '' || location.hostname.startsWith('192.168.') || location.hostname === '::1') {
+            play_button.style.display = 'none';
+            const script = document.createElement('script');
+            script.src = "script.js";
+            script.type = "module";
+            script.async = true;
+            document.body.appendChild(script);
+        }
+    </script>
+    <!--<script type="module" src="script.js"></script>-->
 </body>
 </html>

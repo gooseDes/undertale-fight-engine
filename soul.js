@@ -38,7 +38,7 @@ export class Soul {
     }
 
     kill() {
-        location.reload();
+        location.href = location.href;
     }
 
     update(dt) {

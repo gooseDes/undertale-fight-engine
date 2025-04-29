@@ -19,37 +19,9 @@ if ('ontouchstart' in window) {
     zone: document.getElementById('joystick-zone'),
     mode: "static",
     position: { left: "10svh", bottom: "10svh" },
-    color: "white",
+    color: "linear-gradient(135deg, #ff0000, #ff7700)",
   });
 }
-
-if (localStorage.getItem('wasFullscreen') === 'true') {
-  document.documentElement.requestFullscreen().catch((err) => {
-    console.warn("Can't open fullscreen", err);
-  });
-  localStorage.removeItem('wasFullscreen');
-}
-
-window.addEventListener('resize', (e) => {
-  //reloadPageAndStayFullscreen();
-});
-
-function reloadPageAndStayFullscreen() {
-  if (document.fullscreenElement) {
-    localStorage.setItem('wasFullscreen', 'true');
-  }
-  location.reload();
-}
-
-document.addEventListener("touchstart", (e) => {
-  reloadPageAndStayFullscreen();
-});
-
-document.addEventListener("click", (e) => {
-  document.documentElement.requestFullscreen().catch((err) => {
-    console.warn('Не удалось войти в fullscreen при клике:', err);
-  });
-});
 
 document.addEventListener("keydown", (e) => {
   keys[e.code] = true;
@@ -69,16 +41,16 @@ soul.x = width * 0.5;
 soul.y = height * 0.6;
 field.offsetY = height * 0.1;
 
-const totskiy_face = new Sprite(canvas, "assets/images/totskiy_face.png", width * 0.1, height * 0.1, 10, 10);
-const totskiy_body = new Sprite(canvas, "assets/images/totskiy_body.png", width * 0.1, height * 0.1, 10, 60);
-const totskiy_legs = new Sprite(canvas, "assets/images/totskiy_legs.png", width * 0.1, height * 0.1, 10, 125);
+const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.006);
+const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
+const totskiy_legs = new Sprite(canvas, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
 
 const fight_button = new Sprite(canvas, "assets/images/fight.png", width * 0.15, height * 0.1, width * 0.05, height * 0.85);
 const act_button = new Sprite(canvas, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
 const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
 const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
 
-var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.1);
+var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
 var enemy = new Enemy(canvas, 'bone', width, height / 2, width * 0.01, height * 0.5);
 enemy.setMovement(-0.1, 0);

@@ -30,3 +30,25 @@ body {
   left: 2svh;
   bottom: 2svh;
 }
+
+#play-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10svh;
+  height: 8svh;
+  translate: -50% -50%;
+  border-image: url('assets/images/button1.png') 0.4 fill stretch;
+  image-rendering: pixelated;
+  background-color: rgb(0, 0, 0, 0);
+  color: #fff;
+  font-family: 'Press Start 2P';
+  font-size: 1.5svh;
+  transition: all 0.5s;
+  filter: grayscale();
+}
+
+#play-button:hover {
+  scale: 1.1;
+  filter: none;
+}
