@@ -66,11 +66,11 @@ body {
     position: absolute;
     color: #fff;
     font-size: 2svh;
-    right: 5svh;
-    bottom: 5svh;
+    right: 12svh;
+    bottom: 12svh;
     background-color: rgb(255, 255, 255, 0.5);
     border: none;
     border-radius: 2svh;
-    width: 5svh;
+    width: 15svh;
     aspect-ratio: 1/1;
 }
