@@ -1,7 +1,9 @@
 import { Character } from "./character.js";
+import { DialogText } from "./dialog_text.js";
 import { Enemy } from "./enemy.js";
 import { Field } from "./field.js";
 import { Particle } from "./particle.js";
+import { ProgressBar } from "./progress_bar.js";
 import { Soul } from "./soul.js";
 import { Sprite } from "./sprite.js";
 
@@ -35,7 +37,8 @@ document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
-var field = new Field(canvas);
+const dialog = new DialogText(canvas, width, height, 0, 0);
+var field = new Field(canvas, dialog);
 var soul = new Soul(canvas, keys, joystick, field);
 var particles = [];
 for (let i = 0; i < 15; i++) {
@@ -43,7 +46,7 @@ for (let i = 0; i < 15; i++) {
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
-field.offsetY = height * 0.1;
+field.offsetY = height * 0.07;
 field.addSoul(soul);
 
 document.getElementById('confirm-btn').addEventListener('click', () => {
@@ -58,6 +61,10 @@ const fight_button = new Sprite(canvas, "assets/images/fight.png", width * 0.15,
 const act_button = new Sprite(canvas, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
 const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
 const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
+
+const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
+hp_bar.value = 1;
+hp_bar.max = 30;
 
 var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
@@ -84,12 +91,23 @@ function update(currentTime) {
   act_button.draw();
   item_button.draw();
   mercy_button.draw();
+  
+  hp_bar.value = soul.hp/30;
+  hp_bar.update(dt);
+  hp_bar.draw();
 
   field.update(dt);
   field.draw();
 
   soul.update(dt);
   soul.draw();
+
+  dialog.width = field.actualWidth - width*0.08;
+  dialog.height = field.actualHeight - width*0.08;
+  dialog.x = width*0.5 - dialog.width/2 + field.offsetX;
+  dialog.y = height*0.5 - dialog.height/2 + field.offsetY;
+  dialog.update(dt);
+  dialog.draw();
 
   totskiy.x = width * 0.5 + field.currentOffsetX;
   totskiy.y = height * -0.02 + field.currentOffsetY;

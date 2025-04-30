@@ -18,7 +18,7 @@ export class Soul {
         this.state = 'action_select';
         this.actionSelection = 0;
         this.actionSelectionKeyJustPressed = false;
-        this.hp = 20;
+        this.hp = 30;
 
         this.heart = [
             [0, 1, 1, 0, 0, 1, 1, 0],

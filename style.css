@@ -9,6 +9,11 @@ body {
     height: 100vh;
 }
 
+@font-face {
+  font-family: 'undertale';
+  src: url('assets/fonts/determinationmonoweb.ttf') format('truetype');
+}
+
 #content {
     position: absolute;
     top: 50%;
@@ -60,6 +65,7 @@ body {
   left: 5svh;
   top: 2svh;
   font-family: 'Press Start 2P';
+  display: none;
 }
 
 #confirm-btn {

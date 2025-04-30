@@ -1,7 +1,7 @@
 import { Enemy } from "./enemy.js";
 
 export class Field {
-    constructor(canvas) {
+    constructor(canvas, dialog) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.w = canvas.clientWidth;
@@ -9,6 +9,8 @@ export class Field {
         console.log(this.w, this.h);
         this.width = this.w * 0.5;
         this.height = this.w * 0.2;
+        this.actualWidth = 0;
+        this.actualHeight = 0;
         this.lineWidth = this.w * 0.01;
         this.offsetX = 0;
         this.offsetY = 0;
@@ -18,6 +20,7 @@ export class Field {
         this.action = -1;
         this.soul = null;
         this.sinceDodgingStarted = 0;
+        this.dialog = dialog;
     }
 
     addEnemy(enemy) {
@@ -61,13 +64,19 @@ export class Field {
                 this.sinceDodgingStarted += dt;
                 this.currentOffsetX = Math.sin(this.sinceDodgingStarted) * this.w * 0.1
                 this.currentOffsetY = Math.cos(this.sinceDodgingStarted*1.1) * this.h * 0.1
+                this.width = this.w*0.8;
+                this.dialog.reset();
                 break;
             default:
                 this.sinceDodgingStarted = 0;
                 this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
                 this.currentOffsetY += (this.offsetY - this.currentOffsetY) * dt * 8;
+                this.width = this.w*0.5;
+                this.dialog.text = "* I'm Totskiy Шмаравозович"
                 break;
         }
+        this.actualWidth -= (this.actualWidth - this.width) * dt * 8;
+        this.actualHeight -= (this.actualHeight - this.height) * dt * 8;
     }
 
     draw() {
@@ -76,6 +85,6 @@ export class Field {
         })
         this.ctx.strokeStyle = 'white';
         this.ctx.lineWidth = this.lineWidth;
-        this.ctx.strokeRect(this.w*0.5 - this.width*0.5 + this.currentOffsetX, this.h*0.5 - this.height*0.5 + this.currentOffsetY, this.width, this.height);
+        this.ctx.strokeRect(this.w*0.5 - this.actualWidth*0.5 + this.currentOffsetX, this.h*0.5 - this.actualHeight*0.5 + this.currentOffsetY, this.actualWidth, this.actualHeight);
     }
 }
