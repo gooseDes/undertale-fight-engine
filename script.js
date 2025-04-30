@@ -12,7 +12,7 @@ const width = canvas.width = content.clientWidth;
 const height = canvas.height = content.clientHeight;
 const keys = {};
 
-const music = Audio("assets/sounds/music.mp3");
+const music = new Audio("assets/sounds/music.mp3");
 music.play();
 
 var joystick = null;
