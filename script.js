@@ -12,6 +12,9 @@ const width = canvas.width = content.clientWidth;
 const height = canvas.height = content.clientHeight;
 const keys = {};
 
+const music = Audio("assets/sounds/undertale_100. MEGALOVANIA.mp3");
+music.play();
+
 var joystick = null;
 
 if ('ontouchstart' in window) {
