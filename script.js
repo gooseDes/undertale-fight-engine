@@ -24,6 +24,7 @@ if ('ontouchstart' in window) {
     position: { left: "12svh", bottom: "12svh" },
     color: "linear-gradient(135deg, #ff0000, #ff7700)",
   });
+  document.getElementById('confirm-btn').style.display = 'block';
 }
 
 document.addEventListener("keydown", (e) => {

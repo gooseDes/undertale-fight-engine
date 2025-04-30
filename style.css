@@ -66,11 +66,13 @@ body {
     position: absolute;
     color: #fff;
     font-size: 2svh;
-    right: 12svh;
-    bottom: 12svh;
-    background-color: rgb(255, 255, 255, 0.5);
+    right: 8vw;
+    bottom: 8vw;
+    background: linear-gradient(135deg, #ff000066, #ff770066);
     border: none;
+    border: #ffffff66 0.2vh solid;
     border-radius: 2svh;
-    width: 15svh;
+    width: 10vw;
     aspect-ratio: 1/1;
+    display: none;
 }
