@@ -6,7 +6,6 @@ export class Field {
         this.ctx = canvas.getContext('2d');
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
-        console.log(this.w, this.h);
         this.width = this.w * 0.5;
         this.height = this.w * 0.2;
         this.actualWidth = 0;
