@@ -14,6 +14,20 @@ const width = canvas.width = content.clientWidth;
 const height = canvas.height = content.clientHeight;
 const keys = {};
 
+['log', 'error', 'warn', 'info'].forEach(function(method) {
+  const original = console[method];
+  console[method] = function(...args) {
+    alert(`[console.${method}]\n` + args.map(a => {
+      try {
+        return typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a);
+      } catch {
+        return '[Unserializable]';
+      }
+    }).join('\n'));
+    original.apply(console, args);
+  };
+});
+
 const music = new Audio("assets/sounds/music.mp3");
 music.play();
 
