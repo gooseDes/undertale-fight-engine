@@ -64,7 +64,7 @@ const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15,
 
 const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
 hp_bar.value = 1;
-hp_bar.max = 30;
+hp_bar.max = 20;
 
 var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
@@ -92,7 +92,7 @@ function update(currentTime) {
   item_button.draw();
   mercy_button.draw();
   
-  hp_bar.value = soul.hp/30;
+  hp_bar.value = soul.hp/20;
   hp_bar.update(dt);
   hp_bar.draw();
 
