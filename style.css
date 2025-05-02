@@ -11,7 +11,7 @@ body {
 
 @font-face {
   font-family: 'undertale';
-  src: url('assets/fonts/determinationmonoweb.ttf') format('truetype');
+  src: url('assets/fonts/determinationmonoweb.otf') format('truetype');
 }
 
 #content {

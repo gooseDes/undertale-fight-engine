@@ -15,7 +15,7 @@ export class Soul {
         this.oldFieldOffsetX = this.field.currentOffsetX;
         this.oldFieldOffsetY = this.field.currentOffsetY;
         this.joystickAngle = null;
-        this.state = 'action_select';
+        this.state = 'action_selection';
         this.actionSelection = 0;
         this.actionSelectionKeyJustPressed = false;
         this.hp = 20;
@@ -42,8 +42,13 @@ export class Soul {
     }
 
     confirmSelection() {
-        if (this.state === 'action_select') {
-            this.field.actionSelected(this.actionSelection);
+        switch (this.state) {
+            case 'action_selection':
+                this.field.actionSelected(this.actionSelection+1);
+                break;
+            case 'target_selection':
+                this.field.actionSelected(-1);
+                break;
         }
     }
 
@@ -56,7 +61,7 @@ export class Soul {
         this.height = this.size * 9;
 
         switch (this.state) {
-            case 'action_select':
+            case 'action_selection':
                 const heart_positions = [0.11, 0.37, 0.615, 0.87];
                 this.x += ((heart_positions[this.actionSelection] * this.w) - this.x) * dt * 12;
                 this.y += ((this.h * 0.8 + (Math.sin(performance.now() * 0.01) * this.h * 0.01)) - this.y) * dt * 12;
@@ -89,10 +94,48 @@ export class Soul {
                     this.actionSelectionKeyJustPressed = false;
                 }
 
-                if (this.keys['Enter']) {
+                if (this.keys['Enter'] && !this.actionSelectionKeyJustPressed) {
+                    this.actionSelectionKeyJustPressed = true;
                     this.confirmSelection();
                 }
 
+                break;
+
+            case 'target_selection':
+                this.x = this.w*0.5 - this.field.width*0.5 + this.field.currentOffsetX + this.width*0.4;
+                this.y = this.h*0.5 - this.field.height*0.5 + this.field.currentOffsetY + this.height*1.75 + this.height*this.actionSelection;
+                if ((this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
+                    this.actionSelectionKeyJustPressed = true;
+                    this.actionSelection += 1;
+                }
+
+                if ((this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 275) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
+                    this.actionSelectionKeyJustPressed = true;
+                    this.actionSelection -= 1;
+                }
+
+                if (this.actionSelection >= 1) {
+                    this.actionSelection = 0;
+                } else if (this.actionSelection < 0) {
+                    this.actionSelection = 3;
+                }
+
+                let pressFoundTarget = false;
+                Object.keys(this.keys).some(key => {
+                    if (this.keys[key]) {
+                        pressFoundTarget = true;
+                        return true;
+                    }
+                });
+
+                if (!pressFoundTarget && this.joystickAngle == null) {
+                    this.actionSelectionKeyJustPressed = false;
+                }
+
+                if (this.keys['Enter'] && !this.actionSelectionKeyJustPressed) {
+                    this.actionSelectionKeyJustPressed = true;
+                    this.confirmSelection();
+                }
                 break;
 
             case 'dodging':

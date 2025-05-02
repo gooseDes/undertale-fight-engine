@@ -36,6 +36,24 @@ export class DialogText {
         this.ctx.textBaseline = 'top';
         this.ctx.font = `${this.w*0.03}px undertale`;
         this.ctx.fillStyle = 'white';
-        this.ctx.fillText(this.actualText, this.x, this.y);
+
+        const words = this.actualText.split(' ');
+        let line = '';
+        let y = this.y;
+        const lineHeight = this.w * 0.04;
+
+        for (let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' ';
+            let metrics = this.ctx.measureText(testLine);
+            let testWidth = metrics.width;
+            if (testWidth > this.width && n > 0) {
+                this.ctx.fillText(line, this.x, y);
+                line = words[n] + ' ';
+                y += lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+        this.ctx.fillText(line, this.x, y);
     }
 }

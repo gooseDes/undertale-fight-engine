@@ -1,4 +1,5 @@
 import { Enemy } from "./enemy.js";
+import * as dialogs from "./dialogs.js";
 
 export class Field {
     constructor(canvas, dialog) {
@@ -16,7 +17,8 @@ export class Field {
         this.currentOffsetX = 0;
         this.currentOffsetY = 0;
         this.enemies = [];
-        this.action = -1;
+        this.action = 0;
+        this.oldAction = null;
         this.soul = null;
         this.sinceDodgingStarted = 0;
         this.dialog = dialog;
@@ -34,7 +36,12 @@ export class Field {
     actionSelected(action) {
         this.action = action;
         switch (this.action) {
-            case 0:
+            case 1:
+                this.soul.state = 'target_selection';
+                this.dialog.reset();
+                this.dialog.text = "* Totskiy";
+                break;
+            case -1:
                 this.soul.state = 'dodging';
                 for (let i = 0; i < 30; i++) {
                     var enemy = new Enemy(canvas, 'bone', this.w*(1 + i*0.1), (this.h / 2 + this.h * ((Math.random())*0.25))*Math.round(Math.random()), this.w * 0.01, this.h * 0.5);
@@ -45,7 +52,21 @@ export class Field {
         }
     }
 
+    actionChanged() {
+        switch (this.action) {
+            case 0:
+                this.dialog.text = "* " + dialogs.messages[Math.round(Math.random()*dialogs.messages.length)];
+                break;
+        }
+        this.actualWidth += this.w*0.1;
+        this.actualHeight -= this.h*0.1;
+    }
+
     update(dt) {
+        if (this.action != this.oldAction) {
+            this.actionChanged();
+            this.oldAction = this.action;
+        }
         var any_on_screen = false;
         this.enemies.forEach((enemy) => {
             if (enemy.x > 0) {
@@ -53,25 +74,24 @@ export class Field {
             }
             enemy.update(dt);
         })
-        if (!any_on_screen) {
-            this.action = -1;
-            this.soul.state = 'action_select';
-            this.enemies = [];
-        }
         switch (this.action) {
-            case 0:
+            case -1:
                 this.sinceDodgingStarted += dt;
                 this.currentOffsetX = Math.sin(this.sinceDodgingStarted) * this.w * 0.1
                 this.currentOffsetY = Math.cos(this.sinceDodgingStarted*1.1) * this.h * 0.1
                 this.width = this.w*0.8;
                 this.dialog.reset();
+                if (!any_on_screen) {
+                    this.action = 0;
+                    this.soul.state = 'action_selection';
+                    this.enemies = [];
+                }
                 break;
             default:
                 this.sinceDodgingStarted = 0;
                 this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
                 this.currentOffsetY += (this.offsetY - this.currentOffsetY) * dt * 8;
-                this.width = this.w*0.5;
-                this.dialog.text = "* I'm Totskiy Шмаравозович"
+                this.width = this.w*0.6;
                 break;
         }
         this.actualWidth -= (this.actualWidth - this.width) * dt * 8;
