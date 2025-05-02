@@ -104,12 +104,12 @@ export class Soul {
             case 'target_selection':
                 this.x = this.w*0.5 - this.field.width*0.5 + this.field.currentOffsetX + this.width*0.4;
                 this.y = this.h*0.5 - this.field.height*0.5 + this.field.currentOffsetY + this.height*1.75 + this.height*this.actionSelection;
-                if ((this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
+                if ((this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 275) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
                     this.actionSelectionKeyJustPressed = true;
                     this.actionSelection += 1;
                 }
 
-                if ((this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 275) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
+                if ((this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
                     this.actionSelectionKeyJustPressed = true;
                     this.actionSelection -= 1;
                 }
