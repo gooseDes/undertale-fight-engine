@@ -7,6 +7,7 @@ export class Soul {
         this.size = this.w * 0.003;
         this.speed = this.w * 0.2;
         this.keys = keys;
+        this.prevKeys = {};
         this.field = field;
         this.x = 0;
         this.y = 0;
@@ -17,7 +18,7 @@ export class Soul {
         this.joystickAngle = null;
         this.state = 'action_selection';
         this.actionSelection = 0;
-        this.actionSelectionKeyJustPressed = false;
+        this.maxActionSelection = 4;
         this.hp = 20;
 
         this.heart = [
@@ -56,6 +57,25 @@ export class Soul {
         location.href = location.href;
     }
 
+    isDirectionJustPressed(direction) {
+        switch (direction) {
+            case 'up':
+                return (this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.prevKeys['KeyW'];
+            case 'down':
+                return (this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 270) < 60 && this.joystickAngle)) && !this.prevKeys['KeyS'];
+            case 'left':
+                return (this.keys['KeyA'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 180) < 60 && this.joystickAngle)) && !this.prevKeys['KeyA'];
+            case 'right':
+                return (this.keys['KeyD'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 0) < 60 && this.joystickAngle)) && !this.prevKeys['KeyD'];
+            default:
+                return false;
+        }
+    }
+
+    isConfirmJustPressed() {
+        return this.keys['Enter'] && !this.prevKeys['Enter'];
+    }
+
     update(dt) {
         this.width = this.size * 9;
         this.height = this.size * 9;
@@ -66,74 +86,44 @@ export class Soul {
                 this.x += ((heart_positions[this.actionSelection] * this.w) - this.x) * dt * 12;
                 this.y += ((this.h * 0.8 + (Math.sin(performance.now() * 0.01) * this.h * 0.01)) - this.y) * dt * 12;
 
-                if ((this.keys['KeyD'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 0) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
+                if (this.isDirectionJustPressed('right')) {
                     this.actionSelection += 1;
                 }
 
-                if ((this.keys['KeyA'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 180) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
+                if (this.isDirectionJustPressed('left')) {
                     this.actionSelection -= 1;
                 }
 
-                if (this.actionSelection >= 4) {
+                if (this.actionSelection >= this.maxActionSelection) {
                     this.actionSelection = 0;
                 } else if (this.actionSelection < 0) {
-                    this.actionSelection = 3;
+                    this.actionSelection = this.maxActionSelection-1;
                 }
 
-                let pressFound = false;
-                Object.keys(this.keys).some(key => {
-                    if (this.keys[key]) {
-                        pressFound = true;
-                        return true;
-                    }
-                });
-
-                if (!pressFound && this.joystickAngle == null) {
-                    this.actionSelectionKeyJustPressed = false;
-                }
-
-                if (this.keys['Enter'] && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
+                if (this.isConfirmJustPressed()) {
                     this.confirmSelection();
                 }
-
                 break;
 
             case 'target_selection':
                 this.x = this.w*0.5 - this.field.width*0.5 + this.field.currentOffsetX + this.width*0.4;
                 this.y = this.h*0.5 - this.field.height*0.5 + this.field.currentOffsetY + this.height*1.75 + this.height*this.actionSelection;
-                if ((this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 275) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
-                    this.actionSelection += 1;
-                }
 
-                if ((this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
+                if (this.isDirectionJustPressed('up')) {
                     this.actionSelection -= 1;
                 }
 
-                if (this.actionSelection >= 1) {
+                if (this.isDirectionJustPressed('down')) {
+                    this.actionSelection += 1;
+                }
+
+                if (this.actionSelection >= this.maxActionSelection) {
                     this.actionSelection = 0;
                 } else if (this.actionSelection < 0) {
-                    this.actionSelection = 3;
+                    this.actionSelection = this.maxActionSelection-1;
                 }
 
-                let pressFoundTarget = false;
-                Object.keys(this.keys).some(key => {
-                    if (this.keys[key]) {
-                        pressFoundTarget = true;
-                        return true;
-                    }
-                });
-
-                if (!pressFoundTarget && this.joystickAngle == null) {
-                    this.actionSelectionKeyJustPressed = false;
-                }
-
-                if (this.keys['Enter'] && !this.actionSelectionKeyJustPressed) {
-                    this.actionSelectionKeyJustPressed = true;
+                if (this.isConfirmJustPressed()) {
                     this.confirmSelection();
                 }
                 break;
@@ -191,8 +181,9 @@ export class Soul {
                 break;
 
             default:
-                return;
+                break;
         }
+        this.prevKeys = { ...this.keys };
     }
 
     draw() {

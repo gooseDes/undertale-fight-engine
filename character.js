@@ -1,4 +1,4 @@
-import { strings } from "./dialogs.js";
+import { missMessages } from "./dialogs.js";
 import { to_draw, to_update } from "./global.js";
 import { SplashText } from "./splash_text.js";
 
@@ -22,7 +22,7 @@ export class Character {
 
     damage() {
         const splash = new SplashText(this.canvas, this.w, this.h, this.x, this.y+this.height);
-        splash.text = strings.miss;
+        splash.text = missMessages[Math.floor(Math.random()*missMessages.length)];
         to_update.push(splash);
         to_draw.push(splash);
     }

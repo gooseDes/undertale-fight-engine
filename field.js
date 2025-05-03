@@ -42,9 +42,11 @@ export class Field {
                 this.soul.state = 'target_selection';
                 this.dialog.reset();
                 this.dialog.text = "* Totskiy";
+                this.soul.maxActionSelection = 1;
                 break;
             case -1:
                 this.soul.state = 'dodging';
+                this.soul.maxActionSelection = 4;
                 for (let i = 0; i < 30; i++) {
                     var enemy = new Enemy(canvas, 'bone', this.w*(1 + i*0.1), (this.h / 2 + this.h * ((Math.random())*0.25))*Math.round(Math.random()), this.w * 0.01, this.h * 0.5);
                     enemy.setMovement(-0.3 - (i*0.005), (Math.random()-0.5)*0.01);
