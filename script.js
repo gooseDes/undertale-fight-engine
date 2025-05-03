@@ -1,7 +1,7 @@
 import { Character } from "./character.js";
 import { DialogText } from "./dialog_text.js";
-import { Enemy } from "./enemy.js";
 import { Field } from "./field.js";
+import { to_draw, to_update } from "./global.js";
 import { Particle } from "./particle.js";
 import { ProgressBar } from "./progress_bar.js";
 import { Soul } from "./soul.js";
@@ -37,8 +37,14 @@ document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
 
+const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
+const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
+const totskiy_legs = new Sprite(canvas, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
+
+var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
+
 const dialog = new DialogText(canvas, width, height, 0, 0);
-var field = new Field(canvas, dialog);
+var field = new Field(canvas, dialog, totskiy);
 var soul = new Soul(canvas, keys, joystick, field);
 var particles = [];
 for (let i = 0; i < 15; i++) {
@@ -53,10 +59,6 @@ document.getElementById('confirm-btn').addEventListener('click', () => {
     soul.confirmSelection();
 });
 
-const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
-const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
-const totskiy_legs = new Sprite(canvas, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
-
 const fight_button = new Sprite(canvas, "assets/images/fight.png", width * 0.15, height * 0.1, width * 0.05, height * 0.85);
 const act_button = new Sprite(canvas, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
 const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
@@ -65,8 +67,6 @@ const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15,
 const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
 hp_bar.value = 1;
 hp_bar.max = 20;
-
-var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
 let lastTime = performance.now();
 
@@ -108,6 +108,14 @@ function update(currentTime) {
   dialog.y = height*0.5 - dialog.height/2 + field.offsetY;
   dialog.update(dt);
   dialog.draw();
+
+  to_update.forEach((item) => {
+    item.update(dt);
+  });
+  
+  to_draw.forEach((item) => {
+    item.draw();
+  });
 
   totskiy.x = width * 0.5 + field.currentOffsetX;
   totskiy.y = height * -0.02 + field.currentOffsetY;

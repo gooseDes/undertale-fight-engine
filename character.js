@@ -1,3 +1,7 @@
+import { strings } from "./dialogs.js";
+import { to_draw, to_update } from "./global.js";
+import { SplashText } from "./splash_text.js";
+
 export class Character {
     constructor(canvas, face, body, legs, width, height, x, y) {
         this.canvas = canvas;
@@ -14,6 +18,13 @@ export class Character {
         this.height = height;
         this.x = x;
         this.y = y;
+    }
+
+    damage() {
+        const splash = new SplashText(this.canvas, this.w, this.h, this.x, this.y+this.height);
+        splash.text = strings.miss;
+        to_update.push(splash);
+        to_draw.push(splash);
     }
 
     update(dt) {

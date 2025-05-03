@@ -1,8 +1,9 @@
 import { Enemy } from "./enemy.js";
 import * as dialogs from "./dialogs.js";
+import { DialogText } from "./dialog_text.js";
 
 export class Field {
-    constructor(canvas, dialog) {
+    constructor(canvas, dialog, character) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.w = canvas.clientWidth;
@@ -22,6 +23,7 @@ export class Field {
         this.soul = null;
         this.sinceDodgingStarted = 0;
         this.dialog = dialog;
+        this.character = character;
     }
 
     addEnemy(enemy) {
@@ -56,6 +58,9 @@ export class Field {
         switch (this.action) {
             case 0:
                 this.dialog.text = "* " + dialogs.messages[Math.round(Math.random()*dialogs.messages.length)];
+                break;
+            case -1:
+                this.character.damage();
                 break;
         }
         this.actualWidth += this.w*0.1;
