@@ -100,7 +100,7 @@ export class Field {
                 this.sinceDodgingStarted += dt;
                 this.dialog.reset();
                 lua_runtime.run(this.currentUpdateLua);
-                if (!any_on_screen && this.enemiesWasOnScreen) {
+                if (!any_on_screen && this.enemiesWasOnScreen && this.sinceDodgingStarted > 1) {
                     this.action = 0;
                     this.soul.state = 'action_selection';
                     this.enemies = [];
