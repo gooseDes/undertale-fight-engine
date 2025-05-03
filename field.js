@@ -26,6 +26,7 @@ export class Field {
         this.dialog = dialog;
         this.character = character;
         this.currentUpdateLua = '';
+        this.enemiesWasOnScreen = false;
     }
 
     addEnemy(enemy) {
@@ -78,6 +79,7 @@ export class Field {
         }
         this.actualWidth += this.w*0.1;
         this.actualHeight -= this.h*0.1;
+        this.enemiesWasOnScreen = false;
     }
 
     update(dt) {
@@ -87,17 +89,18 @@ export class Field {
         }
         var any_on_screen = false;
         this.enemies.forEach((enemy) => {
+            this.enemiesWasOnScreen = true;
+            enemy.update(dt);
             if (enemy.x > 0) {
                 any_on_screen = true;
             }
-            enemy.update(dt);
         })
         switch (this.action) {
             case -1:
                 this.sinceDodgingStarted += dt;
                 this.dialog.reset();
                 lua_runtime.run(this.currentUpdateLua);
-                if (!any_on_screen) {
+                if (!any_on_screen && this.enemiesWasOnScreen) {
                     this.action = 0;
                     this.soul.state = 'action_selection';
                     this.enemies = [];
