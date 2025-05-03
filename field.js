@@ -1,6 +1,7 @@
 import { Enemy } from "./enemy.js";
 import * as dialogs from "./dialogs.js";
-import { DialogText } from "./dialog_text.js";
+import { lua_runtime } from "./global.js";
+import { loadFile } from "./lua.js";
 
 export class Field {
     constructor(canvas, dialog, character) {
@@ -24,6 +25,7 @@ export class Field {
         this.sinceDodgingStarted = 0;
         this.dialog = dialog;
         this.character = character;
+        this.currentUpdateLua = '';
     }
 
     addEnemy(enemy) {
@@ -47,11 +49,20 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                for (let i = 0; i < 30; i++) {
-                    var enemy = new Enemy(canvas, 'bone', this.w*(1 + i*0.1), (this.h / 2 + this.h * ((Math.random())*0.25))*Math.round(Math.random()), this.w * 0.01, this.h * 0.5);
-                    enemy.setMovement(-0.3 - (i*0.005), (Math.random()-0.5)*0.01);
-                    this.addEnemy(enemy);
-                }
+                const attack_name = "0";
+                loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
+                    if (code != 'no') {
+                        lua_runtime.run(code);
+                    }
+                });
+                loadFile("scripts/attacks/" + attack_name + "/update.lua").then((code) => {
+                    if (code != 'no') {
+                        this.currentUpdateLua = code;
+                        lua_runtime.run(code);
+                    } else {
+                        this.currentUpdateLua = '';
+                    }
+                });
                 break;
         }
     }
@@ -84,10 +95,8 @@ export class Field {
         switch (this.action) {
             case -1:
                 this.sinceDodgingStarted += dt;
-                this.currentOffsetX = Math.sin(this.sinceDodgingStarted) * this.w * 0.1
-                this.currentOffsetY = Math.cos(this.sinceDodgingStarted*1.1) * this.h * 0.1
-                this.width = this.w*0.8;
                 this.dialog.reset();
+                lua_runtime.run(this.currentUpdateLua);
                 if (!any_on_screen) {
                     this.action = 0;
                     this.soul.state = 'action_selection';

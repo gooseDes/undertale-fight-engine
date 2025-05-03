@@ -12,13 +12,16 @@ export class SplashText {
         this.y = y;
         this.text = "";
         this.alpha = 1.0;
-        this.speedY = -12;
+        this.speedY = -24;
+        this.speedX = 24 * (Math.random() < 0.5 ? -1 : 1);
     }
 
     update(dt) {
         this.alpha -= dt * 0.5;
+        this.x += this.speedX * dt * 10;
         this.y += this.speedY * dt * 10;
-        this.speedY += 0.2;
+        this.speedX *= 0.99;
+        this.speedY += 0.3;
         if (this.alpha < 0) {
             this.alpha = 0;
             to_update.splice(to_update.indexOf(this), 1);

@@ -1,7 +1,8 @@
 import { Character } from "./character.js";
 import { DialogText } from "./dialog_text.js";
+import { Enemy } from "./enemy.js";
 import { Field } from "./field.js";
-import { to_draw, to_update } from "./global.js";
+import { to_draw, to_update, lua_runtime } from "./global.js";
 import { Particle } from "./particle.js";
 import { ProgressBar } from "./progress_bar.js";
 import { Soul } from "./soul.js";
@@ -67,6 +68,21 @@ const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15,
 const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
 hp_bar.value = 1;
 hp_bar.max = 20;
+
+lua_runtime.register('log', (message) => {
+  console.log("[lua] " + message);
+});
+
+lua_runtime.registerObject('soul', soul);
+lua_runtime.registerObject('field', field);
+
+lua_runtime.register('createEnemy', (type, x, y, w, h) => {
+  var enemy = new Enemy(canvas, type, x*width, y*height, w*width, h*width);
+  field.addEnemy(enemy);
+  return enemy;
+});
+
+lua_runtime.run(`math.randomseed(os.time())`);
 
 let lastTime = performance.now();
 
