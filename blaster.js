@@ -37,6 +37,7 @@ export class Blaster extends Enemy {
         this.isShooted = true;
         this.isStarted = false;
         this.isStartingStarted = false;
+        this.damage = 0.1;
     }
 
     update(dt) {
