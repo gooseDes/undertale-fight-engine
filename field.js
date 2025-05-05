@@ -50,7 +50,7 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                const attack_name = "0";
+                const attack_name = String(Math.round(Math.random()*1));
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
                     if (code != 'no') {
                         lua_runtime.run(code);

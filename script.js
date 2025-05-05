@@ -1,3 +1,4 @@
+import { Blaster } from "./blaster.js";
 import { Character } from "./character.js";
 import { DialogText } from "./dialog_text.js";
 import { Enemy } from "./enemy.js";
@@ -69,12 +70,16 @@ const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*
 hp_bar.value = 1;
 hp_bar.max = 20;
 
+var dt = 0;
+
 lua_runtime.register('log', (message) => {
   console.log("[lua] " + message);
 });
 
 lua_runtime.registerObject('soul', soul);
 lua_runtime.registerObject('field', field);
+lua_runtime.registerObject('window', window);
+lua_runtime.registerObject('global', {});
 
 lua_runtime.register('createEnemy', (type, x, y, w, h) => {
   var enemy = new Enemy(canvas, type, x*width, y*height, w*width, h*width);
@@ -82,12 +87,34 @@ lua_runtime.register('createEnemy', (type, x, y, w, h) => {
   return enemy;
 });
 
+lua_runtime.register('createBlaster', (x, y, w, direction) => {
+  const blaster = new Blaster(canvas, 'default');
+  blaster.setAttackPlace(x*width, y*height, w*width, direction*Math.PI/180);
+  field.addEnemy(blaster);
+  to_update.push(blaster);
+  to_draw.push(blaster);
+  return blaster;
+});
+
+lua_runtime.register('getWindowWidth', () => {
+  return width;
+});
+
+lua_runtime.register('getWindowHeight', () => {
+  return height;
+});
+
+lua_runtime.register('getDeltaTime', () => {
+  return dt;
+});
+
 lua_runtime.run(`math.randomseed(os.time())`);
 
 let lastTime = performance.now();
 
+
 function update(currentTime) {
-  const dt = (currentTime - lastTime) / 1000;
+  dt = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
   requestAnimationFrame(update);
 

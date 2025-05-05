@@ -1,3 +1,24 @@
+function isCollidingWithRotatedRect(soul, enemy) {
+    const cx = enemy.x + enemy.width / 2;
+    const cy = enemy.y + enemy.height / 2;
+    const angle = enemy.angle || 0;
+
+    const sx = soul.x + soul.width / 2;
+    const sy = soul.y + soul.height / 2;
+
+    const dx = sx - cx;
+    const dy = sy - cy;
+
+    const localX = Math.cos(-angle) * dx - Math.sin(-angle) * dy;
+    const localY = Math.sin(-angle) * dx + Math.cos(-angle) * dy;
+
+    return (
+        Math.abs(localX) < enemy.width / 2 &&
+        Math.abs(localY) < enemy.height / 2
+    );
+}
+
+
 export class Soul {
     constructor(canvas, keys, joystick, field) {
         this.canvas = canvas;
@@ -158,15 +179,15 @@ export class Soul {
                 }
 
                 this.field.enemies.forEach(enemy => {
-                    if ((this.x + this.width >= enemy.x && this.x <= enemy.x + enemy.width) &&
-                        (this.y + this.height >= enemy.y && this.y <= enemy.y + enemy.height)) {
-                        this.hp -= dt * 12;
+                    if (isCollidingWithRotatedRect(this, enemy)) {
+                        this.hp -= dt * 60;
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();
                         }
                     }
                 });
+                
 
                 const rightBound = this.w / 2 + this.field.width / 2 - this.width + this.field.currentOffsetX;
                 const bottomBound = this.h / 2 + this.field.height / 2 - this.height + this.field.currentOffsetY;

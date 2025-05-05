@@ -1,3 +1,22 @@
-field.currentOffsetX = math.sin(field.sinceDodgingStarted) * field.w * 0.1
-field.currentOffsetY = math.cos(field.sinceDodgingStarted * 1.1) * field.h * 0.1
-field.width = field.w * 0.8
+if os.time() - global.firstShooted <= 5 then
+    if os.time() - global.lastShooted > 0 then
+        function angleTo(x1, y1, x2, y2)
+            local dx = x2 - x1
+            local dy = y2 - y1
+            local angle = math.atan(dy / dx)
+
+            if dx < 0 then
+                angle = angle + math.pi
+            end
+
+            return math.deg(angle)
+        end
+
+        local x = math.random()
+        local y = math.random()
+        local dir = angleTo(x*getWindowWidth(), y*getWindowHeight(), soul.x, soul.y)
+
+        createBlaster(x, y, 1/12, dir)
+        global.lastShooted = os.time()
+    end
+end

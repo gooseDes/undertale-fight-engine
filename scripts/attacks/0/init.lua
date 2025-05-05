@@ -1,32 +1,19 @@
-local numPairs = 60  
-local gapHeight = 0.26 
-local minY = 0.2     
-local maxY = 0.4  
-local maxYGapChange = 0.1
-local spacing = 0.09   
-local startX = 1   
-local wallWidth = 0.01  
-local wallThickness = 0.2
-local moveSpeed = -0.3
+function angleTo(x1, y1, x2, y2)
+    local dx = x2 - x1
+    local dy = y2 - y1
+    local angle = math.atan(dy / dx)
 
-local prevGapCenter = (minY + maxY) / 2
+    if dx < 0 then
+        angle = angle + math.pi
+    end
 
-for i = 0, numPairs - 1 do
-    local gapCenter = prevGapCenter + (math.random() * 2 - 1) * maxYGapChange
-    gapCenter = math.max(minY, math.min(maxY, gapCenter))
-    
-    createEnemy("bone",
-                startX + i * spacing,
-                gapCenter - gapHeight/2 - wallThickness/2,  
-                wallWidth,
-                wallThickness).setMovement(moveSpeed - i*0.0035, math.random()*(-0.005))
-    
-    
-    createEnemy("bone",
-                startX + i * spacing,
-                gapCenter + gapHeight/2 + wallThickness/2,  
-                wallWidth,
-                wallThickness).setMovement(moveSpeed - i*0.0035, math.random()*(0.005))
-    
-    prevGapCenter = gapCenter  
+    return math.deg(angle)
 end
+
+local x = math.random()
+local y = math.random()
+local dir = angleTo(x*getWindowWidth(), y*getWindowHeight(), soul.x, soul.y)
+
+createBlaster(x, y, 1/12, dir)
+global.lastShooted = os.time()
+global.firstShooted = os.time()
