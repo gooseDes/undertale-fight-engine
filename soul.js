@@ -37,6 +37,8 @@ export class Soul {
         this.oldFieldOffsetX = this.field.currentOffsetX;
         this.oldFieldOffsetY = this.field.currentOffsetY;
         this.joystickAngle = null;
+        this.prevJoystickAngle = null;
+        this.joystickDistance = 0;
         this.state = 'action_selection';
         this.actionSelection = 0;
         this.maxActionSelection = 4;
@@ -56,9 +58,11 @@ export class Soul {
         if (joystick) {
             joystick.on('move', (evt, data) => {
                 this.joystickAngle = data.angle.radian;
+                this.joystickDistance = data.distance / 50;
             });
             joystick.on('end', () => {
                 this.joystickAngle = null;
+                this.joystickDistance = 0;
             });
         }
     }
@@ -81,13 +85,13 @@ export class Soul {
     isDirectionJustPressed(direction) {
         switch (direction) {
             case 'up':
-                return (this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && !this.prevKeys['KeyW'];
+                return (this.keys['KeyW'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 90) < 60 && this.joystickAngle)) && (!this.prevKeys['KeyW'] && !this.prevJoystickAngle);
             case 'down':
-                return (this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 270) < 60 && this.joystickAngle)) && !this.prevKeys['KeyS'];
+                return (this.keys['KeyS'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 270) < 60 && this.joystickAngle)) && (!this.prevKeys['KeyS'] && !this.prevJoystickAngle);
             case 'left':
-                return (this.keys['KeyA'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 180) < 60 && this.joystickAngle)) && !this.prevKeys['KeyA'];
+                return (this.keys['KeyA'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 180) < 60 && this.joystickAngle)) && (!this.prevKeys['KeyA'] && !this.prevJoystickAngle);
             case 'right':
-                return (this.keys['KeyD'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 0) < 60 && this.joystickAngle)) && !this.prevKeys['KeyD'];
+                return (this.keys['KeyD'] || (Math.abs(this.joystickAngle * (180 / Math.PI) - 0) < 60 && this.joystickAngle)) && (!this.prevKeys['KeyD'] && !this.prevJoystickAngle);
             default:
                 return false;
         }
@@ -174,13 +178,13 @@ export class Soul {
                 }
 
                 if (this.joystickAngle) {
-                    this.x += Math.cos(this.joystickAngle) * this.speed * dt;
-                    this.y -= Math.sin(this.joystickAngle) * this.speed * dt;
+                    this.x += Math.cos(this.joystickAngle) * this.speed * this.joystickDistance * dt;
+                    this.y -= Math.sin(this.joystickAngle) * this.speed * this.joystickDistance * dt;
                 }
 
                 this.field.enemies.forEach(enemy => {
                     if (isCollidingWithRotatedRect(this, enemy)) {
-                        this.hp -= dt * 60;
+                        this.hp -= dt * 60 * enemy.damage;
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();
@@ -205,6 +209,7 @@ export class Soul {
                 break;
         }
         this.prevKeys = { ...this.keys };
+        this.prevJoystickAngle = this.joystickAngle;
     }
 
     draw() {

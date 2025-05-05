@@ -19,6 +19,7 @@ export class Enemy {
         this.oldFieldOffsetX = 0;
         this.oldFieldOffsetY = 0;
         this.opacity = 1;
+        this.damage = 1;
     }
 
     setMovement(x, y) {
@@ -49,6 +50,7 @@ export class Enemy {
                     to_draw.splice(to_draw.indexOf(this), 1);
                     this.field.enemies.splice(this.field.enemies.indexOf(this), 1);
                 }
+                this.damage = 0.5;
                 break;
         }
     }
