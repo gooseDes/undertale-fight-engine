@@ -11,11 +11,16 @@ export class Sprite {
         this.height = height;
         this.x = x;
         this.y = y;
+        this.opacity = 1;
+        this.actualOpacity = 1;
     }
     update(dt) {
-
+        this.actualOpacity += (this.opacity - this.actualOpacity) * dt * 8;
     }
     draw() {
+        this.ctx.save();
+        this.ctx.globalAlpha = this.actualOpacity;
         this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        this.ctx.restore();
     }
 }

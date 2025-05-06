@@ -1,4 +1,3 @@
-import { Enemy } from "./enemy.js";
 import * as dialogs from "./dialogs.js";
 import { lua_runtime } from "./global.js";
 import { loadFile } from "./lua.js";
@@ -51,6 +50,7 @@ export class Field {
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
                 const attack_name = String(Math.round(Math.random()*1));
+                //const attack_name = "0";
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
                     if (code != 'no') {
                         lua_runtime.run(code);
@@ -72,6 +72,7 @@ export class Field {
         switch (this.action) {
             case 0:
                 this.dialog.text = "* " + dialogs.messages[Math.round(Math.random()*dialogs.messages.length)];
+                lua_runtime.run(`showButtons()`);
                 break;
             case -1:
                 this.character.damage();
@@ -91,7 +92,7 @@ export class Field {
         this.enemies.forEach((enemy) => {
             this.enemiesWasOnScreen = true;
             enemy.update(dt);
-            if (enemy.x > 0) {
+            if (enemy.x > 0 && enemy.x < this.w && enemy.y > 0 && enemy.y < this.h && enemy.type != 'blaster' && enemy.constructor.name != 'Blaster') {
                 any_on_screen = true;
             }
         })
@@ -111,6 +112,7 @@ export class Field {
                 this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
                 this.currentOffsetY += (this.offsetY - this.currentOffsetY) * dt * 8;
                 this.width = this.w*0.6;
+                this.height = this.w*0.2;
                 break;
         }
         this.actualWidth -= (this.actualWidth - this.width) * dt * 8;

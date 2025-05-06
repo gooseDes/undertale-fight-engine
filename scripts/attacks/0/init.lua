@@ -21,5 +21,14 @@ end
 local dir = angleTo(x*getWindowWidth(), y*getWindowHeight(), soul.x, soul.y)
 
 createBlaster(x, y, 1/12, dir)
-global.lastShooted = os.time()
-global.firstShooted = os.time()
+global.lastShooted = getTime()
+global.firstShooted = getTime()
+
+hideButtons()
+
+for i = 1, 5 do
+    createEnemy("default", 0.25, 0-i*0.5, 0.5, 0.01).setMovement(0, 0.2+i*0.005)
+end
+for i = 1, 5 do
+    createEnemy("default", 0.75, 0.25-i*0.5, 0.5, 0.01).setMovement(0, 0.2+i*0.005)
+end

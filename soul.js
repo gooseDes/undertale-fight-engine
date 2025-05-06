@@ -1,23 +1,23 @@
 function isCollidingWithRotatedRect(soul, enemy) {
-    const cx = enemy.x + enemy.width / 2;
-    const cy = enemy.y + enemy.height / 2;
-    const angle = enemy.angle || 0;
-
     const sx = soul.x + soul.width / 2;
     const sy = soul.y + soul.height / 2;
+    const radius = Math.max(soul.width, soul.height) / 2;
+
+    const cx = enemy.x;
+    const cy = enemy.y;
+    const angle = enemy.angle || 0;
 
     const dx = sx - cx;
     const dy = sy - cy;
-
     const localX = Math.cos(-angle) * dx - Math.sin(-angle) * dy;
     const localY = Math.sin(-angle) * dx + Math.cos(-angle) * dy;
 
-    return (
-        Math.abs(localX) < enemy.width / 2 &&
-        Math.abs(localY) < enemy.height / 2
-    );
-}
+    const ex = Math.max(-enemy.width / 2, Math.min(localX, enemy.width / 2));
+    const ey = Math.max(-enemy.height / 2, Math.min(localY, enemy.height / 2));
 
+    const distSq = (localX - ex) ** 2 + (localY - ey) ** 2;
+    return distSq < radius * radius;
+}
 
 export class Soul {
     constructor(canvas, keys, joystick, field) {
@@ -184,7 +184,8 @@ export class Soul {
 
                 this.field.enemies.forEach(enemy => {
                     if (isCollidingWithRotatedRect(this, enemy)) {
-                        this.hp -= dt * 60 * enemy.damage;
+                        console.log('Collision detected!');
+                        this.hp -= dt * 20 * enemy.damage * enemy.opacity;
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();

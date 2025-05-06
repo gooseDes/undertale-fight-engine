@@ -12,6 +12,7 @@ export class Blaster extends Enemy {
         this.opacity = 1;
         this.image = new Image()
         this.image.src = "assets/images/blaster.png";
+        this.damage = 0.1;
     }
 
     setAttackPlace(x, y, width, direction) {
@@ -25,9 +26,9 @@ export class Blaster extends Enemy {
         const enemy = new Enemy(
             this.canvas,
             'blaster',
-            this.x - this.w/2 + this.width/2 + Math.cos(this.angle)*this.w/2,
-            this.y - this.height/2 + Math.sin(this.angle)*this.w/2,
-            this.w,
+            this.attackPlaceX,
+            this.attackPlaceY - this.height / 2,
+            this.height,
             this.attackPlaceWidth
         );
         enemy.angle = this.angle;
@@ -37,7 +38,6 @@ export class Blaster extends Enemy {
         this.isShooted = true;
         this.isStarted = false;
         this.isStartingStarted = false;
-        this.damage = 0.1;
     }
 
     update(dt) {
@@ -59,7 +59,7 @@ export class Blaster extends Enemy {
                 this.isStarted = true;
             }, 500);
             if (this.isStarted) {
-                this.opacity -= dt * 0.5;
+                this.opacity -= dt;
                 if (this.opacity < 0) {
                     to_update.splice(to_update.indexOf(this), 1);
                     to_draw.splice(to_draw.indexOf(this), 1);
@@ -74,15 +74,22 @@ export class Blaster extends Enemy {
 
     draw() {
         this.ctx.save();
-        this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
+        this.ctx.translate(this.x, this.y);
         this.ctx.rotate(this.angle);
-
+        
         this.ctx.save();
         this.ctx.globalAlpha = this.opacity;
         this.ctx.rotate(-Math.PI / 2);
-        this.ctx.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height * 2);
+        
+        this.ctx.drawImage(
+            this.image,
+            -this.width * 0.75,
+            -this.height / 2,
+            this.width * 1.5,
+            this.height * 1.7
+        );
+        
         this.ctx.restore();
-
-        this.ctx.restore();
+        this.ctx.restore();        
     }
 }

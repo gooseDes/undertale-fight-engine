@@ -44,63 +44,36 @@ export class Enemy {
 
         switch (this.type) {
             case 'blaster':
-                this.opacity -= dt;
+                let grow = dt * this.w * 10;
+                this.width += grow;
+
+                this.x += Math.cos(this.angle) * grow * 0.5;
+                this.y += Math.sin(this.angle) * grow * 0.5;
+
+                this.opacity -= dt * 1.5;
                 if (this.opacity < 0) {
                     to_update.splice(to_update.indexOf(this), 1);
                     to_draw.splice(to_draw.indexOf(this), 1);
                     this.field.enemies.splice(this.field.enemies.indexOf(this), 1);
                 }
-                this.damage = 0.4;
+                this.damage = 0.5;
                 break;
         }
     }
 
     draw() {
-        this.ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.angle);
+        this.ctx.globalAlpha = this.opacity;
         switch (this.type) {
-            case 'bone':
-                const radius = this.width / 1.6;
-                const x = this.x, y = this.y, w = this.width, h = this.height;
-                this.ctx.fillRect(this.x, this.y, this.width, this.height);
-    
-                this.ctx.beginPath();
-                this.ctx.arc(x + radius * 1.3, y + h, radius, 0, 2 * Math.PI);
-                this.ctx.fill();
-                this.ctx.closePath();
-    
-                this.ctx.beginPath();
-                this.ctx.arc(x + w - radius * 1.3, y + h, radius, 0, 2 * Math.PI);
-                this.ctx.fill();
-                this.ctx.closePath();
-    
-                this.ctx.beginPath();
-                this.ctx.arc(x + radius * 1.3, y, radius, 0, 2 * Math.PI);
-                this.ctx.fill();
-                this.ctx.closePath();
-    
-                this.ctx.beginPath();
-                this.ctx.arc(x + w - radius * 1.3, y, radius, 0, 2 * Math.PI);
-                this.ctx.fill();
-                this.ctx.closePath();
-    
-                break;
-            
             case 'blaster':
-                this.ctx.save();
-                this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-                this.ctx.rotate(this.angle);
                 this.ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
-                this.ctx.restore();
                 break;
-    
             default:
-                this.ctx.save();
-                this.ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-                this.ctx.rotate(this.angle);
                 this.ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
-                this.ctx.restore();
                 break;
         }
+        this.ctx.restore();
     }
-    
 }

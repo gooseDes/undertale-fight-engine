@@ -91,8 +91,6 @@ lua_runtime.register('createBlaster', (x, y, w, direction) => {
   const blaster = new Blaster(canvas, 'default');
   blaster.setAttackPlace(x*width, y*height, w*width, direction*Math.PI/180);
   field.addEnemy(blaster);
-  to_update.push(blaster);
-  to_draw.push(blaster);
   return blaster;
 });
 
@@ -106,6 +104,24 @@ lua_runtime.register('getWindowHeight', () => {
 
 lua_runtime.register('getDeltaTime', () => {
   return dt;
+});
+
+lua_runtime.register('getTime', () => {
+  return performance.now()/1000;
+})
+
+lua_runtime.register('hideButtons', () => {
+  fight_button.opacity = 0;
+  act_button.opacity = 0;
+  item_button.opacity = 0;
+  mercy_button.opacity = 0;
+});
+
+lua_runtime.register('showButtons', () => {
+  fight_button.opacity = 1;
+  act_button.opacity = 1;
+  item_button.opacity = 1;
+  mercy_button.opacity = 1;
 });
 
 lua_runtime.run(`math.randomseed(os.time())`);
@@ -130,6 +146,10 @@ function update(currentTime) {
   totskiy.update(dt);
   totskiy.draw();
 
+  fight_button.update(dt);
+  act_button.update(dt);
+  item_button.update(dt);
+  mercy_button.update(dt);
   fight_button.draw();
   act_button.draw();
   item_button.draw();
@@ -161,7 +181,7 @@ function update(currentTime) {
   });
 
   totskiy.x = width * 0.5 + field.currentOffsetX;
-  totskiy.y = height * -0.02 + field.currentOffsetY;
+  totskiy.y = height * 0.15 + field.currentOffsetY - field.actualHeight * 0.5;
 }
 
 update();
