@@ -1,5 +1,5 @@
 import * as dialogs from "./dialogs.js";
-import { lua_runtime } from "./global.js";
+import { global, lua_runtime } from "./global.js";
 import { loadFile } from "./lua.js";
 
 export class Field {
@@ -49,7 +49,8 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                const attack_name = String(Math.round(Math.random()*1));
+                const attack_name = String(Math.round(Math.random()*2));
+                //const attack_name = '2';
                 this.isLoaded = false;
                 this.currentUpdateLua = '';
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
@@ -75,6 +76,7 @@ export class Field {
             case 0:
                 this.dialog.text = "* " + dialogs.messages[Math.round(Math.random()*dialogs.messages.length)];
                 lua_runtime.run(`showButtons()`);
+                global.angleTarget = 0;
                 break;
             case -1:
                 this.character.damage();
@@ -94,10 +96,19 @@ export class Field {
         this.enemies.forEach((enemy) => {
             this.enemiesWasOnScreen = true;
             enemy.update(dt);
-            if (enemy.x > 0 && enemy.x < this.w && enemy.y > 0 && enemy.y < this.h && enemy.type != 'blaster' && enemy.constructor.name != 'Blaster') {
+            const halfW = enemy.width / 2;
+            const halfH = enemy.height / 2;
+            if (
+                enemy.x + halfW > 0 &&
+                enemy.x - halfW < this.w &&
+                enemy.y + halfH > 0 &&
+                enemy.y - halfH < this.h &&
+                enemy.type != 'blaster' &&
+                enemy.constructor.name != 'Blaster'
+            ) {
                 any_on_screen = true;
             }
-        })
+        });
         switch (this.action) {
             case -1:
                 this.sinceDodgingStarted += dt;

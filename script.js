@@ -3,7 +3,7 @@ import { Character } from "./character.js";
 import { DialogText } from "./dialog_text.js";
 import { Enemy } from "./enemy.js";
 import { Field } from "./field.js";
-import { to_draw, to_update, lua_runtime } from "./global.js";
+import { to_draw, to_update, lua_runtime, global } from "./global.js";
 import { Particle } from "./particle.js";
 import { ProgressBar } from "./progress_bar.js";
 import { Soul } from "./soul.js";
@@ -38,6 +38,9 @@ document.addEventListener("keydown", (e) => {
 document.addEventListener("keyup", (e) => {
   keys[e.code] = false;
 });
+
+global.angleTarget = 0;
+var angle = 0;
 
 const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
 const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
@@ -80,6 +83,7 @@ lua_runtime.registerObject('soul', soul);
 lua_runtime.registerObject('field', field);
 lua_runtime.registerObject('window', window);
 lua_runtime.registerObject('global', {});
+lua_runtime.register('canvas', canvas);
 
 lua_runtime.register('createEnemy', (type, x, y, w, h) => {
   var enemy = new Enemy(canvas, type, x*width, y*height, w*width, h*width);
@@ -124,10 +128,44 @@ lua_runtime.register('showButtons', () => {
   mercy_button.opacity = 1;
 });
 
+lua_runtime.register('setFieldSize', (w, h) => {
+  field.width = w * width;
+  field.height = h * height;
+});
+
+lua_runtime.register('setFieldWidth', (w) => {
+  field.width = w * width;
+});
+
+lua_runtime.register('setFieldHeight', (h) => {
+  field.height = h * height;
+})
+
+lua_runtime.register('setScreenRotation', (angle) => {
+  global.angleTarget = angle;
+});
+
+lua_runtime.register('rand', (min, max) => {
+  if (min == undefined) {
+    return Math.random();
+  } else if (max == undefined) {
+    return Math.random() * min;
+  } else {
+    return Math.random() * (max - min) + min;
+  }
+});
+
+lua_runtime.register('random', () => {
+  return Math.random();
+})
+
+lua_runtime.register('round', (value) => {
+  return Math.round(value);
+})
+
 lua_runtime.run(`math.randomseed(os.time())`);
 
 let lastTime = performance.now();
-
 
 function update(currentTime) {
   dt = (currentTime - lastTime) / 1000;
@@ -182,6 +220,11 @@ function update(currentTime) {
 
   totskiy.x = width * 0.5 + field.currentOffsetX;
   totskiy.y = height * 0.15 + field.currentOffsetY - field.actualHeight * 0.5;
+
+  if (global.angleTarget != angle) {
+    angle += (global.angleTarget - angle) * dt * 8;
+    canvas.style.transform = `rotate(${angle}deg)`;
+  }
 }
 
 update();
