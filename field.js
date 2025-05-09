@@ -50,19 +50,21 @@ export class Field {
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
                 const attack_name = String(Math.round(Math.random()*1));
-                //const attack_name = "0";
+                this.isLoaded = false;
+                this.currentUpdateLua = '';
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
                     if (code != 'no') {
                         lua_runtime.run(code);
                     }
-                });
-                loadFile("scripts/attacks/" + attack_name + "/update.lua").then((code) => {
-                    if (code != 'no') {
-                        this.currentUpdateLua = code;
-                        lua_runtime.run(code);
-                    } else {
-                        this.currentUpdateLua = '';
-                    }
+                    loadFile("scripts/attacks/" + attack_name + "/update.lua").then((code) => {
+                        if (code != 'no') {
+                            this.currentUpdateLua = code;
+                            lua_runtime.run(code);
+                        } else {
+                            this.currentUpdateLua = 'log("no update")';
+                        }
+                        this.isLoaded = true;
+                    });
                 });
                 break;
         }
@@ -100,11 +102,13 @@ export class Field {
             case -1:
                 this.sinceDodgingStarted += dt;
                 this.dialog.reset();
-                lua_runtime.run(this.currentUpdateLua);
-                if (!any_on_screen && this.enemiesWasOnScreen && this.sinceDodgingStarted > 1) {
-                    this.action = 0;
-                    this.soul.state = 'action_selection';
-                    this.enemies = [];
+                if (this.isLoaded) {
+                    lua_runtime.run(this.currentUpdateLua);
+                    if (!any_on_screen && this.enemiesWasOnScreen && this.sinceDodgingStarted > 1) {
+                        this.action = 0;
+                        this.soul.state = 'action_selection';
+                        this.enemies = [];
+                    }
                 }
                 break;
             default:
