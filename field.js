@@ -49,8 +49,8 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                const attack_name = String(Math.round(Math.random()*2));
-                //const attack_name = '2';
+                const attack_name = String(Math.round(Math.random()*3));
+                //const attack_name = '3';
                 this.isLoaded = false;
                 this.currentUpdateLua = '';
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {

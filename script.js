@@ -145,6 +145,11 @@ lua_runtime.register('setScreenRotation', (angle) => {
   global.angleTarget = angle;
 });
 
+lua_runtime.register('setSoulPosition', (x, y) => {
+  soul.x = x * width;
+  soul.y = y * height;
+});
+
 lua_runtime.register('rand', (min, max) => {
   if (min == undefined) {
     return Math.random();
