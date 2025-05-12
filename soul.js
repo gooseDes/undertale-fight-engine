@@ -1,7 +1,7 @@
 function isCollidingWithRotatedRect(soul, enemy) {
     const sx = soul.x + soul.width / 2;
     const sy = soul.y + soul.height / 2;
-    const radius = Math.max(soul.width, soul.height) / 2;
+    const radius = Math.max(soul.width, soul.height) / 4;
 
     const cx = enemy.x;
     const cy = enemy.y;

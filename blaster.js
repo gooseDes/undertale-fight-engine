@@ -43,6 +43,16 @@ export class Blaster extends Enemy {
     update(dt) {
         this.x += (this.attackPlaceX - this.x) * dt * 8;
         this.y += (this.attackPlaceY - this.y) * dt * 8;
+        if (this.oldFieldOffsetX != this.field.currentOffsetX) {
+            this.attackPlaceX += this.field.currentOffsetX - this.oldFieldOffsetX;
+        }
+        if (this.oldFieldOffsetY != this.field.currentOffsetY) {
+            this.attackPlaceY += this.field.currentOffsetY - this.oldFieldOffsetY;
+        }
+
+        this.oldFieldOffsetX = this.field.currentOffsetX;
+        this.oldFieldOffsetY = this.field.currentOffsetY;
+
         this.width += (this.attackPlaceWidth - this.width) * dt * 8;
         this.height = this.width;
 
@@ -50,9 +60,9 @@ export class Blaster extends Enemy {
 
         if (
             Math.abs(this.angle - this.attackPlaceDirection) < 0.1 &&
-            Math.abs(this.x - this.attackPlaceX) < 0.1 &&
-            Math.abs(this.y - this.attackPlaceY) < 0.1 &&
-            Math.abs(this.width - this.attackPlaceWidth) < 0.1
+            Math.abs(this.x - this.attackPlaceX) < this.w*0.01 &&
+            Math.abs(this.y - this.attackPlaceY) < this.w*0.01 &&
+            Math.abs(this.width - this.attackPlaceWidth) < this.w*0.01
         ) {
             this.isStartingStarted = true;
             setTimeout(() => {

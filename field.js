@@ -26,6 +26,7 @@ export class Field {
         this.character = character;
         this.currentUpdateLua = '';
         this.enemiesWasOnScreen = false;
+        this.autoCurrentOffsetControl = false;
     }
 
     addEnemy(enemy) {
@@ -49,8 +50,8 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                const attack_name = String(Math.round(Math.random()*3));
-                //const attack_name = '3';
+                const attack_name = String(Math.round(Math.random()*4));
+                //const attack_name = '4';
                 this.isLoaded = false;
                 this.currentUpdateLua = '';
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
@@ -77,6 +78,7 @@ export class Field {
                 this.dialog.text = "* " + dialogs.messages[Math.round(Math.random()*dialogs.messages.length)];
                 lua_runtime.run(`showButtons()`);
                 global.angleTarget = 0;
+                this.autoCurrentOffsetControl = false;
                 break;
             case -1:
                 this.character.damage();
@@ -119,6 +121,10 @@ export class Field {
                         this.action = 0;
                         this.soul.state = 'action_selection';
                         this.enemies = [];
+                    }
+                    if (this.autoCurrentOffsetControl) {
+                        this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
+                        this.currentOffsetY += (this.offsetY - this.currentOffsetY) * dt * 8;
                     }
                 }
                 break;

@@ -20,11 +20,20 @@ export class Enemy {
         this.oldFieldOffsetY = 0;
         this.opacity = 1;
         this.damage = 1;
+        this.gravityX = 0;
+        this.gravityY = 0;
     }
 
     setMovement(x, y) {
         this.speedX = x;
         this.speedY = y;
+        return this;
+    }
+
+    setGravity(x, y) {
+        this.gravityX = x;
+        this.gravityY = y;
+        return this;
     }
 
     update(dt) {
@@ -38,6 +47,8 @@ export class Enemy {
         this.oldFieldOffsetX = this.field.currentOffsetX;
         this.oldFieldOffsetY = this.field.currentOffsetY;
         
+        this.speedX += this.gravityX;
+        this.speedY += this.gravityY;
         this.x += this.speedX * dt * this.w;
         this.y += this.speedY * dt * this.w;
         this.angle += this.speedAngle * dt;
