@@ -40,6 +40,7 @@ document.addEventListener("keyup", (e) => {
 });
 
 global.angleTarget = 0;
+global.previousAttack = -1;
 var angle = 0;
 
 const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
@@ -57,7 +58,7 @@ for (let i = 0; i < 15; i++) {
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
-field.offsetY = height * 0.07;
+field.defaultOffsetY = height * 0.07;
 field.addSoul(soul);
 
 document.getElementById('confirm-btn').addEventListener('click', () => {

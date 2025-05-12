@@ -43,6 +43,17 @@ export class Soul {
         this.actionSelection = 0;
         this.maxActionSelection = 4;
         this.hp = 20;
+        this.shadowsAmount = 8;
+        this.shadows = [];
+        for (let i = 0; i < this.shadowsAmount; i++) {
+            this.shadows.push({
+                x: this.x,
+                y: this.y,
+                width: this.width,
+                height: this.height,
+                opacity: 0.1 - (i / this.shadowsAmount) * 0.1
+            });
+        }
 
         this.heart = [
             [0, 1, 1, 0, 0, 1, 1, 0],
@@ -104,6 +115,10 @@ export class Soul {
     update(dt) {
         this.width = this.size * 9;
         this.height = this.size * 9;
+        for (let i = 0; i < this.shadowsAmount; i++) {
+            this.shadows[i].x += (this.x - this.shadows[i].x) * dt * (i+2)*9;
+            this.shadows[i].y += (this.y - this.shadows[i].y) * dt * (i+2)*9;
+        }
 
         switch (this.state) {
             case 'action_selection':
@@ -161,6 +176,11 @@ export class Soul {
                     this.y += this.field.currentOffsetY - this.oldFieldOffsetY;
                 }
 
+                this.shadows.forEach((shadow) => {
+                    shadow.x += this.field.currentOffsetX - this.oldFieldOffsetX;
+                    shadow.y += this.field.currentOffsetY - this.oldFieldOffsetY;
+                })
+
                 this.oldFieldOffsetX = this.field.currentOffsetX;
                 this.oldFieldOffsetY = this.field.currentOffsetY;
 
@@ -214,6 +234,16 @@ export class Soul {
     }
 
     draw() {
+        this.shadows.forEach((shadow) => {
+            this.ctx.fillStyle = `rgba(255, 0, 0, ${shadow.opacity})`;
+            for (let y = 0; y < this.heart.length; y++) {
+                for (let x = 0; x < this.heart[y].length; x++) {
+                    if (this.heart[y][x]) {
+                        this.ctx.fillRect(x * this.size + shadow.x, y * this.size + shadow.y, this.size + 1, this.size + 1);
+                    }
+                }
+            }
+        });
         this.ctx.fillStyle = 'red';
         for (let y = 0; y < this.heart.length; y++) {
             for (let x = 0; x < this.heart[y].length; x++) {

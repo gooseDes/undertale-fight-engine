@@ -15,6 +15,8 @@ export class Field {
         this.lineWidth = this.w * 0.01;
         this.offsetX = 0;
         this.offsetY = 0;
+        this.defaultOffsetX = 0;
+        this.defaultOffsetY = 0;
         this.currentOffsetX = 0;
         this.currentOffsetY = 0;
         this.enemies = [];
@@ -50,8 +52,12 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                const attack_name = String(Math.round(Math.random()*4));
-                //const attack_name = '4';
+                var attack_name = String(Math.round(Math.random()*4));
+                while (attack_name == global.previousAttack) {
+                    attack_name = String(Math.round(Math.random()*4));
+                }
+                global.previousAttack = attack_name;
+                //attack_name = '4';
                 this.isLoaded = false;
                 this.currentUpdateLua = '';
                 loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
@@ -130,6 +136,8 @@ export class Field {
                 break;
             default:
                 this.sinceDodgingStarted = 0;
+                this.offsetX = this.defaultOffsetX;
+                this.offsetY = this.defaultOffsetY;
                 this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
                 this.currentOffsetY += (this.offsetY - this.currentOffsetY) * dt * 8;
                 this.width = this.w*0.6;
