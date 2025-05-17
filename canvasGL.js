@@ -10,6 +10,7 @@ export class CanvasGL {
     this._globalAlpha = 1.0;
     this._textCanvas = document.createElement('canvas');
     this._textCtx = this._textCanvas.getContext('2d');
+    this._imageCache = new Map();
 
     this.color = [1, 1, 1, 1];
     this.strokeColor = [1, 1, 1, 1];
@@ -29,7 +30,7 @@ export class CanvasGL {
     this._initShaders();
     this._initBuffers();
 
-    this._texture = this.gl.createTexture(); // Shared texture for drawImage/fillText
+    this._texture = this.gl.createTexture();
   }
 
   get globalAlpha() {
@@ -199,11 +200,31 @@ export class CanvasGL {
     gl.useProgram(this.program);
     this._applyTransform();
 
-    gl.bindTexture(gl.TEXTURE_2D, this._texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+    const isCanvas = image instanceof HTMLCanvasElement;
+    const isImage = image instanceof HTMLImageElement;
+
+    let texture;
+
+    if (isImage && (!image.complete || image.naturalWidth === 0)) {
+      return;
+    }
+
+    if (!isCanvas && this._imageCache.has(image)) {
+      texture = this._imageCache.get(image);
+    } else {
+      texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+      if (!isCanvas) {
+        this._imageCache.set(image, texture);
+      }
+    }
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
@@ -221,6 +242,7 @@ export class CanvasGL {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
+
 
   fillText(text, x, y) {
     const ctx = this._textCtx;
