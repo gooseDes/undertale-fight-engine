@@ -27,10 +27,18 @@ export class CanvasGL {
       globalAlpha: 1.0
     };
 
+    this.chromaticAberrationEnabled = false;
+    this.aberrationStrength = 0.005;
+
     this._initShaders();
     this._initBuffers();
 
     this._texture = this.gl.createTexture();
+  }
+
+  setChromaticAberration(enabled, strength = 0.005) {
+    this.chromaticAberrationEnabled = enabled;
+    this.aberrationStrength = strength;
   }
 
   get globalAlpha() {
@@ -67,12 +75,31 @@ export class CanvasGL {
       uniform vec4 uColor;
       uniform sampler2D uImage;
       uniform bool useTexture;
+      uniform bool useChromAb;
+      uniform float chromAbStrength;
       varying vec2 vTexcoord;
       void main() {
         if (useTexture) {
-          gl_FragColor = texture2D(uImage, vTexcoord) * uColor;
+          if (useChromAb) {
+            float offset = chromAbStrength;
+            float r = texture2D(uImage, vTexcoord + vec2(offset, 0.0)).r;
+            float g = texture2D(uImage, vTexcoord).g;
+            float b = texture2D(uImage, vTexcoord - vec2(offset, 0.0)).b;
+            float a = texture2D(uImage, vTexcoord).a;
+            gl_FragColor = vec4(r, g, b, a) * uColor;
+          } else {
+            gl_FragColor = texture2D(uImage, vTexcoord) * uColor;
+          }
         } else {
-          gl_FragColor = uColor;
+          if (useChromAb) {
+            float offset = chromAbStrength;
+            float r = uColor.r + offset;
+            float g = uColor.g;
+            float b = uColor.b - offset;
+            gl_FragColor = vec4(r, g, b, uColor.a);
+          } else {
+            gl_FragColor = uColor;
+          }
         }
       }
     `;
@@ -111,6 +138,8 @@ export class CanvasGL {
       uImage: gl.getUniformLocation(prog, 'uImage'),
       useTexture: gl.getUniformLocation(prog, 'useTexture'),
       uMatrix: gl.getUniformLocation(prog, 'uMatrix'),
+      useChromAb: gl.getUniformLocation(prog, 'useChromAb'),
+      chromAbStrength: gl.getUniformLocation(prog, 'chromAbStrength'),
     };
   }
 
@@ -160,6 +189,8 @@ export class CanvasGL {
     gl.disableVertexAttribArray(this.attribs.texcoord);
 
     gl.uniform1i(this.uniforms.useTexture, false);
+    gl.uniform1i(this.uniforms.useChromAb, this.chromaticAberrationEnabled ? 1 : 0);
+    gl.uniform1f(this.uniforms.chromAbStrength, this.aberrationStrength);
     const colorWithAlpha = [...this.color];
     colorWithAlpha[3] *= this._globalAlpha;
     gl.uniform4fv(this.uniforms.uColor, colorWithAlpha);
@@ -180,7 +211,6 @@ export class CanvasGL {
     this.color = prevColor;
     this._globalAlpha = prevAlpha;
   }
-
 
   strokeRect(x, y, w, h) {
     const oldColor = this.color;
@@ -239,6 +269,8 @@ export class CanvasGL {
     gl.uniform1i(this.uniforms.useTexture, true);
     gl.uniform1i(this.uniforms.uImage, 0);
     gl.uniform4f(this.uniforms.uColor, 1, 1, 1, this._globalAlpha);
+    gl.uniform1i(this.uniforms.useChromAb, this.chromaticAberrationEnabled ? 1 : 0);
+    gl.uniform1f(this.uniforms.chromAbStrength, this.aberrationStrength);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }

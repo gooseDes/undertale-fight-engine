@@ -180,6 +180,8 @@ let lastTime = performance.now();
 const fpsCounter = document.getElementById('fps-counter');
 var fpses = [];
 
+ctx.setChromaticAberration(false, 0);
+
 function update(currentTime) {
   dt = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
