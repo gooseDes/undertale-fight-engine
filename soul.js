@@ -20,9 +20,9 @@ function isCollidingWithRotatedRect(soul, enemy) {
 }
 
 export class Soul {
-    constructor(canvas, keys, joystick, field) {
+    constructor(canvas, ctx, keys, joystick, field) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.size = this.w * 0.003;
@@ -234,8 +234,9 @@ export class Soul {
     }
 
     draw() {
+        this.ctx.fillStyle = '#ff0000';
         this.shadows.forEach((shadow) => {
-            this.ctx.fillStyle = `rgba(255, 0, 0, ${shadow.opacity})`;
+            this.ctx.globalAlpha = shadow.opacity;
             for (let y = 0; y < this.heart.length; y++) {
                 for (let x = 0; x < this.heart[y].length; x++) {
                     if (this.heart[y][x]) {
@@ -244,7 +245,8 @@ export class Soul {
                 }
             }
         });
-        this.ctx.fillStyle = 'red';
+        this.ctx.globalAlpha = 1;
+        this.ctx.fillStyle = '#ff0000';
         for (let y = 0; y < this.heart.length; y++) {
             for (let x = 0; x < this.heart[y].length; x++) {
                 if (this.heart[y][x]) {

@@ -1,7 +1,7 @@
 export class Particle {
-    constructor(canvas, action, speed, size, x, y) {
+    constructor(canvas, ctx, action, speed, size, x, y) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.action = action;
@@ -29,7 +29,10 @@ export class Particle {
         }
     }
     draw() {
-        this.ctx.fillStyle = `rgb(255, 0, 0, ${this.alpha})`;
+        this.ctx.save();
+        this.ctx.globalAlpha = this.alpha;
+        this.ctx.fillStyle = `#ff0000`;
         this.ctx.fillRect(this.x, this.y, this.size, this.size);
+        this.ctx.restore();
     }
 }

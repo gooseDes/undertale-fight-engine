@@ -2,8 +2,8 @@ import { Enemy } from "./enemy.js";
 import { to_draw, to_update } from "./global.js";
 
 export class Blaster extends Enemy {
-    constructor(canvas, type) {
-        super(canvas, type, 0, 0, 0, 0);
+    constructor(canvas, ctx, type) {
+        super(canvas, ctx, type, 0, 0, 0, 0);
         this.attackPlaceX = 0;
         this.attackPlaceY = 0;
         this.attackPlaceWidth = 0;
@@ -25,6 +25,7 @@ export class Blaster extends Enemy {
     shoot(dt) {
         const enemy = new Enemy(
             this.canvas,
+            this.ctx,
             'blaster',
             this.attackPlaceX,
             this.attackPlaceY - this.height / 2,

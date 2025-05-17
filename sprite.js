@@ -1,7 +1,7 @@
 export class Sprite {
-    constructor(canvas, image, width, height, x, y) {
+    constructor(canvas, ctx, image, width, height, x, y) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.imagePath = image;

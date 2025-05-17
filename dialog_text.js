@@ -1,7 +1,7 @@
 export class DialogText {
-    constructor(canvas, width, height, x, y) {
+    constructor(canvas, ctx, width, height, x, y) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.width = width;

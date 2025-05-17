@@ -3,9 +3,9 @@ import { global, lua_runtime } from "./global.js";
 import { loadFile } from "./lua.js";
 
 export class Field {
-    constructor(canvas, dialog, character) {
+    constructor(canvas, ctx, dialog, character) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.width = this.w * 0.5;
@@ -152,7 +152,7 @@ export class Field {
         this.enemies.forEach((enemy) => {
             enemy.draw();
         })
-        this.ctx.strokeStyle = 'white';
+        this.ctx.strokeStyle = '#ffffff';
         this.ctx.lineWidth = this.lineWidth;
         this.ctx.strokeRect(this.w*0.5 - this.actualWidth*0.5 + this.currentOffsetX, this.h*0.5 - this.actualHeight*0.5 + this.currentOffsetY, this.actualWidth, this.actualHeight);
     }

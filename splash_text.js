@@ -1,9 +1,9 @@
 import { to_draw, to_update } from "./global.js";
 
 export class SplashText {
-    constructor(canvas, width, height, x, y) {
+    constructor(canvas, ctx, width, height, x, y) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.width = width;
@@ -30,10 +30,12 @@ export class SplashText {
     }
 
     draw() {
-        this.ctx.fillStyle = `rgb(200, 200, 200, ${this.alpha})`;
+        this.ctx.fillStyle = '#aaaaaa';
+        this.ctx.globalAlpha = this.alpha;
         this.ctx.textAlign = "center";
         this.ctx.textBaseline = "middle";
         this.ctx.font = `${this.width * 0.05}px undertale`;
         this.ctx.fillText(this.text, this.x, this.y);
+        this.ctx.globalAlpha = 1;
     }
 }

@@ -47,7 +47,7 @@ body {
   image-rendering: pixelated;
   background-color: rgb(0, 0, 0, 0);
   color: #fff;
-  font-family: 'Press Start 2P';
+  font-family: 'undertale';
   font-size: 1.5svh;
   transition: all 0.5s;
   filter: grayscale();
@@ -64,21 +64,31 @@ body {
   font-size: 2svh;
   left: 5svh;
   top: 2svh;
-  font-family: 'Press Start 2P';
+  font-family: 'undertale';
   display: none;
 }
 
+#fps-counter {
+  position: absolute;
+  color: #fff;
+  font-size: 2svh;
+  left: 3svh;
+  top: 1svh;
+  font-family: 'undertale';
+}
+
 #confirm-btn {
-    position: absolute;
-    color: #fff;
-    font-size: 2svh;
-    right: 8vw;
-    bottom: 8vw;
-    background: linear-gradient(135deg, #ff000066, #ff770066);
-    border: none;
-    border: #ffffff66 0.2vh solid;
-    border-radius: 2svh;
-    width: 10vw;
-    aspect-ratio: 1/1;
-    display: none;
+  position: absolute;
+  font-family: 'undertale';
+  color: #fff;
+  font-size: 2svh;
+  right: 8vw;
+  bottom: 8vw;
+  background: linear-gradient(135deg, #ff000066, #ff770066);
+  border: none;
+  border: #ffffff66 0.2vh solid;
+  border-radius: 2svh;
+  width: 10vw;
+  aspect-ratio: 1/1;
+  display: none;
 }

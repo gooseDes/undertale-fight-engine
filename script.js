@@ -1,4 +1,5 @@
 import { Blaster } from "./blaster.js";
+import { CanvasGL } from "./canvasGL.js";
 import { Character } from "./character.js";
 import { DialogText } from "./dialog_text.js";
 import { Enemy } from "./enemy.js";
@@ -11,9 +12,12 @@ import { Sprite } from "./sprite.js";
 
 const content = document.getElementById('content');
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-const width = canvas.width = content.clientWidth;
-const height = canvas.height = content.clientHeight;
+const ctx = new CanvasGL(canvas);
+const width = content.clientWidth;
+const height = content.clientHeight;
+canvas.width = width;
+canvas.height = height;
+ctx.resize(width, height);
 const keys = {};
 
 const music = new Audio("assets/sounds/music.mp3");
@@ -43,18 +47,18 @@ global.angleTarget = 0;
 global.previousAttack = -1;
 var angle = 0;
 
-const totskiy_face = new Sprite(canvas, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
-const totskiy_body = new Sprite(canvas, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
-const totskiy_legs = new Sprite(canvas, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
+const totskiy_face = new Sprite(canvas, ctx, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
+const totskiy_body = new Sprite(canvas, ctx, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
+const totskiy_legs = new Sprite(canvas, ctx, "assets/images/totskiy/legs.png", width * 0.1, height * 0.1, 0, 0);
 
-var totskiy = new Character(canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
+var totskiy = new Character(canvas, ctx, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
-const dialog = new DialogText(canvas, width, height, 0, 0);
-var field = new Field(canvas, dialog, totskiy);
-var soul = new Soul(canvas, keys, joystick, field);
+const dialog = new DialogText(canvas, ctx, width, height, 0, 0);
+var field = new Field(canvas, ctx, dialog, totskiy);
+var soul = new Soul(canvas, ctx, keys, joystick, field);
 var particles = [];
 for (let i = 0; i < 15; i++) {
-  particles.push(new Particle(canvas, 'bg', Math.random() * 10 + 25, width * (0.005 + Math.random() * 0.005), width / 15 * i + Math.random() * width / 10, height + Math.random() * height / 10));
+  particles.push(new Particle(canvas, ctx, 'bg', Math.random() * 10 + 25, width * (0.005 + Math.random() * 0.005), width / 15 * i + Math.random() * width / 10, height + Math.random() * height / 10));
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
@@ -65,12 +69,12 @@ document.getElementById('confirm-btn').addEventListener('click', () => {
     soul.confirmSelection();
 });
 
-const fight_button = new Sprite(canvas, "assets/images/fight.png", width * 0.15, height * 0.1, width * 0.05, height * 0.85);
-const act_button = new Sprite(canvas, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
-const item_button = new Sprite(canvas, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
-const mercy_button = new Sprite(canvas, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
+const fight_button = new Sprite(canvas, ctx, "assets/images/fight.png", width * 0.15, height * 0.1, width * 0.05, height * 0.85);
+const act_button = new Sprite(canvas, ctx, "assets/images/act.png", width * 0.15, height * 0.1, width * 0.3, height * 0.85);
+const item_button = new Sprite(canvas, ctx, "assets/images/item.png", width * 0.15, height * 0.1, width * 0.55, height * 0.85);
+const mercy_button = new Sprite(canvas, ctx, "assets/images/mercy.png", width * 0.15, height * 0.1, width * 0.8, height * 0.85);
 
-const hp_bar = new ProgressBar(canvas, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
+const hp_bar = new ProgressBar(canvas, ctx, width*0.15, height*0.06, width*0.5-width*0.15*0.5, height*0.77);
 hp_bar.value = 1;
 hp_bar.max = 20;
 
@@ -87,13 +91,13 @@ lua_runtime.registerObject('global', {});
 lua_runtime.register('canvas', canvas);
 
 lua_runtime.register('createEnemy', (type, x, y, w, h) => {
-  var enemy = new Enemy(canvas, type, x*width, y*height, w*width, h*width);
+  var enemy = new Enemy(canvas, ctx, type, x*width, y*height, w*width, h*width);
   field.addEnemy(enemy);
   return enemy;
 });
 
 lua_runtime.register('createBlaster', (x, y, w, direction) => {
-  const blaster = new Blaster(canvas, 'default');
+  const blaster = new Blaster(canvas, ctx, 'default');
   blaster.setAttackPlace(x*width, y*height, w*width, direction*Math.PI/180);
   field.addEnemy(blaster);
   return blaster;
@@ -173,14 +177,20 @@ lua_runtime.run(`math.randomseed(os.time())`);
 
 let lastTime = performance.now();
 
+const fpsCounter = document.getElementById('fps-counter');
+var fpses = [];
+
 function update(currentTime) {
   dt = (currentTime - lastTime) / 1000;
   lastTime = currentTime;
+  fpses.push(1/dt);
+  if (fpses.length > 10) {
+    fpsCounter.textContent = "FPS: " + Math.round(fpses.reduce((sum, val) => sum + val, 0) / fpses.length);
+    fpses = [];
+  }
   requestAnimationFrame(update);
 
   if (!dt) return;
-
-  ctx.clearRect(0, 0, width, height);
 
   particles.forEach((particle) => {
     particle.update(dt);

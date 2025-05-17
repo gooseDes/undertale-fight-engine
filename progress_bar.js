@@ -1,7 +1,7 @@
 export class ProgressBar {
-    constructor(canvas, width, height, x, y) {
+    constructor(canvas, ctx, width, height, x, y) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.width = width;
@@ -19,7 +19,7 @@ export class ProgressBar {
     }
 
     draw() {
-        this.ctx.fillStyle = 'red';
+        this.ctx.fillStyle = '#ff0000';
         this.ctx.fillRect(this.x, this.y, this.width, this.height);
         this.ctx.fillStyle = '#eeee00';
         this.ctx.fillRect(this.x, this.y, this.width * this.actualValue, this.height);
@@ -33,6 +33,6 @@ export class ProgressBar {
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.lineWidth = this.w*0.004;
-        this.ctx.fillText(Math.round(this.value*this.max), this.x+this.width*0.5, this.y+this.height*0.5, this.width);
+        this.ctx.fillText(Math.round(this.value*this.max), this.x+this.width*0.5, this.y+this.height*0.5);
     }
 }

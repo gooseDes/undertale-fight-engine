@@ -1,9 +1,9 @@
 import { to_draw, to_update } from "./global.js";
 
 export class Enemy {
-    constructor(canvas, type, x, y, width, height) {
+    constructor(canvas, ctx, type, x, y, width, height) {
         this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
+        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.type = type;
@@ -79,9 +79,11 @@ export class Enemy {
         this.ctx.globalAlpha = this.opacity;
         switch (this.type) {
             case 'blaster':
+                this.ctx.fillStyle = '#ffffff';
                 this.ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
                 break;
             default:
+                this.ctx.fillStyle = '#ffffff';
                 this.ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height);
                 break;
         }
