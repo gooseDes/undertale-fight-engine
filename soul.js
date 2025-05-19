@@ -205,7 +205,9 @@ export class Soul {
                 this.field.enemies.forEach(enemy => {
                     if (isCollidingWithRotatedRect(this, enemy)) {
                         console.log('Collision detected!');
-                        this.hp -= dt * 20 * enemy.damage * enemy.opacity;
+                        const damage = dt * 20 * enemy.damage * enemy.opacity;
+                        this.hp -= damage;
+                        this.ctx.setChromaticAberration(true, damage);
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();

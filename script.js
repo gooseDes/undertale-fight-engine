@@ -180,7 +180,7 @@ let lastTime = performance.now();
 const fpsCounter = document.getElementById('fps-counter');
 var fpses = [];
 
-ctx.setChromaticAberration(false, 0);
+ctx.setChromaticAberration(false);
 
 function update(currentTime) {
   dt = (currentTime - lastTime) / 1000;
@@ -193,6 +193,8 @@ function update(currentTime) {
   requestAnimationFrame(update);
 
   if (!dt) return;
+
+  ctx.aberrationStrength += (0 - ctx.aberrationStrength) * dt * 2;
 
   particles.forEach((particle) => {
     particle.update(dt);

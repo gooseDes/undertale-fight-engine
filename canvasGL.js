@@ -78,14 +78,23 @@ export class CanvasGL {
       uniform bool useChromAb;
       uniform float chromAbStrength;
       varying vec2 vTexcoord;
+
       void main() {
         if (useTexture) {
           if (useChromAb) {
             float offset = chromAbStrength;
-            float r = texture2D(uImage, vTexcoord + vec2(offset, 0.0)).r;
-            float g = texture2D(uImage, vTexcoord).g;
-            float b = texture2D(uImage, vTexcoord - vec2(offset, 0.0)).b;
-            float a = texture2D(uImage, vTexcoord).a;
+            vec2 offsetVec = vec2(offset, 0.0);
+
+            vec4 colorR = texture2D(uImage, vTexcoord + offsetVec);
+            vec4 colorG = texture2D(uImage, vTexcoord);
+            vec4 colorB = texture2D(uImage, vTexcoord - offsetVec);
+
+            float r = colorR.r;
+            float g = colorG.g;
+            float b = colorB.b;
+
+            float a = (colorR.a + colorG.a + colorB.a) / 3.0;
+
             gl_FragColor = vec4(r, g, b, a) * uColor;
           } else {
             gl_FragColor = texture2D(uImage, vTexcoord) * uColor;
