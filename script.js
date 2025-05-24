@@ -1,14 +1,14 @@
-import { Blaster } from "./blaster.js";
-import { CanvasGL } from "./canvasGL.js";
-import { Character } from "./character.js";
-import { DialogText } from "./dialog_text.js";
-import { Enemy } from "./enemy.js";
-import { Field } from "./field.js";
-import { to_draw, to_update, lua_runtime, global } from "./global.js";
-import { Particle } from "./particle.js";
-import { ProgressBar } from "./progress_bar.js";
-import { Soul } from "./soul.js";
-import { Sprite } from "./sprite.js";
+import { Blaster } from "/src/enemies/blaster.js";
+import { CanvasGL } from "/src/engine/canvasGL.js";
+import { Character } from "/src/character.js";
+import { DialogText } from "/src/dialog_text.js";
+import { Enemy } from "/src/enemies/enemy.js";
+import { Field } from "/src/field.js";
+import { to_draw, to_update, lua_runtime, global } from "/src/global.js";
+import { Particle } from "/src/particle.js";
+import { ProgressBar } from "/src/engine/progress_bar.js";
+import { Soul } from "/src/soul.js";
+import { Sprite } from "/src/engine/sprite.js";
 
 const content = document.getElementById('content');
 const canvas = document.getElementById('canvas');
