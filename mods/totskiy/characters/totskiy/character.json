@@ -1,0 +1,8 @@
+{
+  "name": "Totskiy",
+  "parts": {
+    "face": { "offsetX": -0.01, "offsetY": 0.02 },
+    "body": { "offsetX": -0.01, "offsetY": 0.005 },
+    "legs": { "offsetX": 0, "offsetY": 0 }
+  }
+}

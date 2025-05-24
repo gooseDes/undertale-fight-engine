@@ -53,7 +53,7 @@ export class Field {
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
                 let attacks = [];
-                fetch(`/mods/${mod.name}/scripts/attacks/attacks.txt`)
+                fetch(`/mods/${mod.name}/attacks/attacks.txt`)
                   .then(res => res.text())
                   .then(text => {
                     const lines = text.split('\n');
@@ -69,11 +69,11 @@ export class Field {
                     global.previousAttackId = attack_name;
                     this.isLoaded = false;
                     this.currentUpdateLua = '';
-                    loadFile(`/mods/${mod.name}/scripts/attacks/` + attack_name + "/init.lua").then((code) => {
+                    loadFile(`/mods/${mod.name}/attacks/` + attack_name + "/init.lua").then((code) => {
                         if (code != 'no') {
                             lua_runtime.run(code);
                         }
-                        loadFile(`/mods/${mod.name}/scripts/attacks/` + attack_name + "/update.lua").then((code) => {
+                        loadFile(`/mods/${mod.name}/attacks/` + attack_name + "/update.lua").then((code) => {
                             if (code != 'no') {
                                 this.currentUpdateLua = code;
                                 lua_runtime.run(code);
