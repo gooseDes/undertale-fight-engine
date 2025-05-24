@@ -35,7 +35,6 @@ export async function startMod(id) {
         characters_file.split('\n').forEach(char => {
             characters.push(char);
         });
-        console.log("gkfdjgjkhsdfjkghdfsjkgjkdsfhgjhsdfkgdfjsghkjfdshgkhdfsjklghdfkjghjkdfhgkdhfskglhdfskjghkdfsghkjsdfhgkjfdshgjklsdf", characters)
     } catch (e) {
         console.warn('Failed to load characters.txt:', e);
     }
