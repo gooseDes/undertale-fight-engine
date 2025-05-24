@@ -1,5 +1,5 @@
 import * as dialogs from "/src/dialogs.js";
-import { global, lua_runtime } from "/src/global.js";
+import { global, lua_runtime, mod } from "/src/global.js";
 import { loadFile } from "/src/engine/lua.js";
 
 export class Field {
@@ -52,26 +52,36 @@ export class Field {
             case -1:
                 this.soul.state = 'dodging';
                 this.soul.maxActionSelection = 4;
-                var attack_name = String(Math.round(Math.random()*4));
-                while (attack_name == global.previousAttack) {
-                    attack_name = String(Math.round(Math.random()*4));
-                }
-                global.previousAttack = attack_name;
-                //attack_name = '4';
-                this.isLoaded = false;
-                this.currentUpdateLua = '';
-                loadFile("scripts/attacks/" + attack_name + "/init.lua").then((code) => {
-                    if (code != 'no') {
-                        lua_runtime.run(code);
+                let attacks = [];
+                fetch(`/mods/${mod.name}/scripts/attacks/attacks.txt`)
+                  .then(res => res.text())
+                  .then(text => {
+                    const lines = text.split('\n');
+                    for (const line of lines) {
+                        attacks.push(line.trim());
                     }
-                    loadFile("scripts/attacks/" + attack_name + "/update.lua").then((code) => {
+                  
+                    var attack_id = String(Math.round(Math.random()*(attacks.length-1)));
+                    while (attack_id == global.previousAttackId) {
+                        attack_id = String(Math.round(Math.random()*(attacks.length-1)));
+                    }
+                    var attack_name = attacks[attack_id];
+                    global.previousAttackId = attack_name;
+                    this.isLoaded = false;
+                    this.currentUpdateLua = '';
+                    loadFile(`/mods/${mod.name}/scripts/attacks/` + attack_name + "/init.lua").then((code) => {
                         if (code != 'no') {
-                            this.currentUpdateLua = code;
                             lua_runtime.run(code);
-                        } else {
-                            this.currentUpdateLua = 'log("no update")';
                         }
-                        this.isLoaded = true;
+                        loadFile(`/mods/${mod.name}/scripts/attacks/` + attack_name + "/update.lua").then((code) => {
+                            if (code != 'no') {
+                                this.currentUpdateLua = code;
+                                lua_runtime.run(code);
+                            } else {
+                                this.currentUpdateLua = 'log("no update")';
+                            }
+                            this.isLoaded = true;
+                        });
                     });
                 });
                 break;

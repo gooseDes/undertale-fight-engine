@@ -4,7 +4,7 @@ import { Character } from "/src/character.js";
 import { DialogText } from "/src/dialog_text.js";
 import { Enemy } from "/src/enemies/enemy.js";
 import { Field } from "/src/field.js";
-import { to_draw, to_update, lua_runtime, global } from "/src/global.js";
+import { to_draw, to_update, lua_runtime, global, startMod } from "/src/global.js";
 import { Particle } from "/src/particle.js";
 import { ProgressBar } from "/src/engine/progress_bar.js";
 import { Soul } from "/src/soul.js";
@@ -46,6 +46,8 @@ document.addEventListener("keyup", (e) => {
 global.angleTarget = 0;
 global.previousAttack = -1;
 var angle = 0;
+
+startMod(0)
 
 const totskiy_face = new Sprite(canvas, ctx, "assets/images/totskiy/face.png", width * 0.07, height * 0.12, 0, height*0.01);
 const totskiy_body = new Sprite(canvas, ctx, "assets/images/totskiy/body.png", width * 0.1, height * 0.1, 0, 0);
