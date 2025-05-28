@@ -75,6 +75,7 @@ body {
   left: 3svh;
   top: 1svh;
   font-family: 'undertale';
+  z-index: 2;
 }
 
 #confirm-btn {
@@ -95,4 +96,5 @@ body {
 
 canvas {
   z-index: 1;
+  translate: 0% -8%;
 }

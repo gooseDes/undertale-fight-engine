@@ -1,7 +1,7 @@
 export class Particle {
-    constructor(canvas, ctx, action, speed, size, x, y) {
+    constructor(app, canvas, action, speed, size, x, y) {
+        this.app = app;
         this.canvas = canvas;
-        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.action = action;
@@ -15,6 +15,8 @@ export class Particle {
         if (this.action == 'bg') {
             this.alpha = 4;
         }
+        this.graphics = new PIXI.Graphics();
+        this.app.stage.addChild(this.graphics);
     }
     update(dt) {
         if (this.action == 'bg') {
@@ -29,10 +31,9 @@ export class Particle {
         }
     }
     draw() {
-        this.ctx.save();
-        this.ctx.globalAlpha = this.alpha;
-        this.ctx.fillStyle = `#ff0000`;
-        this.ctx.fillRect(this.x, this.y, this.size, this.size);
-        this.ctx.restore();
+        this.graphics.clear();
+        this.graphics.beginFill(0xff0000, Math.min(this.alpha, 1));
+        this.graphics.rect(this.x, this.y, this.size, this.size);
+        this.graphics.endFill();
     }
 }

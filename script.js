@@ -15,7 +15,7 @@ const content = document.getElementById('content');
 const width = content.clientWidth;
 const height = content.clientHeight;
 
-await app.init({ antialias: true, resizeTo: content })
+await app.init({ antialias: true, resizeTo: content, backgroundAlpha: 0 })
 const canvas = app.canvas;
 canvas.id = 'canvas';
 content.appendChild(canvas);
@@ -63,8 +63,8 @@ const dialog = new DialogText(app, canvas, width, height, 0, 0);
 var field = new Field(app, canvas, dialog, totskiy);
 var soul = new Soul(app, canvas, keys, joystick, field);
 var particles = [];
-for (let i = 0; i < 15; i++) {
-    particles.push(new Particle(app, canvas, 'bg', Math.random() * 10 + 25, width * (0.005 + Math.random() * 0.005), width / 15 * i + Math.random() * width / 10, height + Math.random() * height / 10));
+for (let i = 0; i < 20; i++) {
+    particles.push(new Particle(app, canvas, 'bg', Math.random() * 10 + 25, width * (0.005 + Math.random() * 0.005), width / 20 * i + Math.random() * width / 10, height + Math.random() * height / 10));
 }
 soul.x = width * 0.5;
 soul.y = height * 0.6;
@@ -200,10 +200,10 @@ function update(currentTime) {
 
     //ctx.aberrationStrength += (0 - ctx.aberrationStrength) * dt * 2;
 
-    /*particles.forEach((particle) => {
+    particles.forEach((particle) => {
         particle.update(dt);
         particle.draw();
-    });*/
+    });
 
     totskiy.update(dt);
     /*totskiy.draw();*/
@@ -212,14 +212,14 @@ function update(currentTime) {
     act_button.update(dt);
     item_button.update(dt);
     mercy_button.update(dt);
-    /*fight_button.draw();
+    fight_button.draw();
     act_button.draw();
     item_button.draw();
-    mercy_button.draw();*/
+    mercy_button.draw();
 
     hp_bar.value = soul.hp / 20;
     hp_bar.update(dt);
-    /*hp_bar.draw();*/
+    hp_bar.draw();
 
     field.update(dt);
     field.draw();
