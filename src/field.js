@@ -2,10 +2,11 @@ import * as dialogs from "/src/dialogs.js";
 import { global, lua_runtime, mod } from "/src/global.js";
 import { loadFile } from "/src/engine/lua.js";
 
+
 export class Field {
-    constructor(canvas, ctx, dialog, character) {
+    constructor(app, canvas, dialog, character) {
+        this.app = app;
         this.canvas = canvas;
-        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.width = this.w * 0.5;
@@ -29,6 +30,8 @@ export class Field {
         this.currentUpdateLua = '';
         this.enemiesWasOnScreen = false;
         this.autoCurrentOffsetControl = false;
+        this.graphics = new PIXI.Graphics();
+        this.app.stage.addChild(this.graphics);
     }
 
     addEnemy(enemy) {
@@ -161,9 +164,9 @@ export class Field {
     draw() {
         this.enemies.forEach((enemy) => {
             enemy.draw();
-        })
-        this.ctx.strokeStyle = '#ffffff';
-        this.ctx.lineWidth = this.lineWidth;
-        this.ctx.strokeRect(this.w*0.5 - this.actualWidth*0.5 + this.currentOffsetX, this.h*0.5 - this.actualHeight*0.5 + this.currentOffsetY, this.actualWidth, this.actualHeight);
+        });
+        this.graphics.clear();
+        this.graphics.rect(this.w*0.5 - this.actualWidth*0.5 + this.currentOffsetX, this.h*0.5 - this.actualHeight*0.5 + this.currentOffsetY, this.actualWidth, this.actualHeight);
+        this.graphics.stroke({ width: this.lineWidth, color: 0xffffff })
     }
 }

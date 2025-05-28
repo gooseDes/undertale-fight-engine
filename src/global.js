@@ -7,6 +7,7 @@ export const mods = [];
 export var mod = { id: 0, name: '' };
 export const characters = [];
 export var global = {};
+export const app = new PIXI.Application();
 
 export async function startMod(id) {
     // load mod

@@ -20,9 +20,9 @@ function isCollidingWithRotatedRect(soul, enemy) {
 }
 
 export class Soul {
-    constructor(canvas, ctx, keys, joystick, field) {
+    constructor(app, canvas, keys, joystick, field) {
+        this.app = app;
         this.canvas = canvas;
-        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.size = this.w * 0.003;
@@ -45,6 +45,8 @@ export class Soul {
         this.hp = 20;
         this.shadowsAmount = 8;
         this.shadows = [];
+        this.graphics = new PIXI.Graphics();
+        this.app.stage.addChild(this.graphics);
         for (let i = 0; i < this.shadowsAmount; i++) {
             this.shadows.push({
                 x: this.x,
@@ -236,23 +238,24 @@ export class Soul {
     }
 
     draw() {
-        this.ctx.fillStyle = '#ff0000';
+        this.graphics.clear()
         this.shadows.forEach((shadow) => {
-            this.ctx.globalAlpha = shadow.opacity;
             for (let y = 0; y < this.heart.length; y++) {
                 for (let x = 0; x < this.heart[y].length; x++) {
                     if (this.heart[y][x]) {
-                        this.ctx.fillRect(x * this.size + shadow.x, y * this.size + shadow.y, this.size + 1, this.size + 1);
+                        this.graphics.beginFill(0xff0000, shadow.opacity);
+                        this.graphics.rect(x * this.size + shadow.x, y * this.size + shadow.y, this.size + 1, this.size + 1);
+                        this.graphics.endFill();
                     }
                 }
             }
         });
-        this.ctx.globalAlpha = 1;
-        this.ctx.fillStyle = '#ff0000';
+
         for (let y = 0; y < this.heart.length; y++) {
             for (let x = 0; x < this.heart[y].length; x++) {
                 if (this.heart[y][x]) {
-                    this.ctx.fillRect(x * this.size + this.x, y * this.size + this.y, this.size + 1, this.size + 1);
+                    this.graphics.rect(x * this.size + this.x, y * this.size + this.y, this.size + 1, this.size + 1);
+                    this.graphics.fill(0xff0000)
                 }
             }
         }
