@@ -17,7 +17,7 @@ export class Sprite {
 
     async load() {
         const texture = await PIXI.Assets.load(this.imagePath);
-        this.sprite = new PIXI.PixiSprite(texture);
+        this.sprite = new PIXI.Sprite(texture);
 
         const aspect = texture.width / texture.height;
 

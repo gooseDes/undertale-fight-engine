@@ -53,9 +53,9 @@ await startMod(0)
 
 let character = await loadCharacter(GLOBAL.characters[0]);
 
-const totskiy_face = new Sprite(app, canvas, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/face.png`, width * 0.07, null, character.parts.face.offsetX * width, character.parts.face.offsetY * height);
-const totskiy_body = new Sprite(app, canvas, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/body.png`, width * 0.1, null, character.parts.body.offsetX * width, character.parts.body.offsetY * height);
-const totskiy_legs = new Sprite(app, canvas, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/legs.png`, width * 0.1, null, character.parts.legs.offsetX * width, character.parts.legs.offsetY * height);
+const totskiy_face = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/face.png`, width * 0.07, null, character.parts.face.offsetX * width, character.parts.face.offsetY * height);
+const totskiy_body = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/body.png`, width * 0.1, null, character.parts.body.offsetX * width, character.parts.body.offsetY * height);
+const totskiy_legs = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/legs.png`, width * 0.1, null, character.parts.legs.offsetX * width, character.parts.legs.offsetY * height);
 
 var totskiy = new Character(app, canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
@@ -75,10 +75,10 @@ document.getElementById('confirm-btn').addEventListener('click', () => {
     soul.confirmSelection();
 });
 
-const fight_button = new Sprite(app, canvas, "assets/images/fight.png", null, height * 0.1, width * 0.05, height * 0.85);
-const act_button = new Sprite(app, canvas, "assets/images/act.png", null, height * 0.1, width * 0.3, height * 0.85);
-const item_button = new Sprite(app, canvas, "assets/images/item.png", null, height * 0.1, width * 0.55, height * 0.85);
-const mercy_button = new Sprite(app, canvas, "assets/images/mercy.png", null, height * 0.1, width * 0.8, height * 0.85);
+const fight_button = new Sprite(app, "assets/images/fight.png", null, height * 0.1, width * 0.05, height * 0.85);
+const act_button = new Sprite(app, "assets/images/act.png", null, height * 0.1, width * 0.3, height * 0.85);
+const item_button = new Sprite(app, "assets/images/item.png", null, height * 0.1, width * 0.55, height * 0.85);
+const mercy_button = new Sprite(app, "assets/images/mercy.png", null, height * 0.1, width * 0.8, height * 0.85);
 
 const hp_bar = new ProgressBar(app, canvas, width * 0.15, height * 0.06, width * 0.5 - width * 0.15 * 0.5, height * 0.77);
 hp_bar.value = 1;
