@@ -1,17 +1,29 @@
 export class DialogText {
-    constructor(canvas, ctx, width, height, x, y) {
-        this.canvas = canvas;
-        this.ctx = ctx;
-        this.w = canvas.clientWidth;
-        this.h = canvas.clientHeight;
+    constructor(app, width, height, x, y) {
+        this.app = app;
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
+
         this.text = '';
         this.actualText = '';
         this.textProgress = 0;
         this.progressReached = -1;
+
+        const style = new PIXI.TextStyle({
+            fontFamily: 'undertale',
+            fontSize: app.renderer.width * 0.03,
+            fill: 'white',
+            wordWrap: true,
+            wordWrapWidth: this.width,
+            lineHeight: app.renderer.width * 0.04,
+        });
+
+        this.textObject = new PIXI.Text('', style);
+        this.textObject.x = x;
+        this.textObject.y = y;
+        this.app.stage.addChild(this.textObject);
     }
 
     reset() {
@@ -19,41 +31,46 @@ export class DialogText {
         this.actualText = '';
         this.textProgress = 0;
         this.progressReached = -1;
+        this.textObject.text = '';
+    }
+
+    setText(newText) {
+        this.reset();
+        this.text = newText;
     }
 
     update(dt) {
+        this.textObject.x = this.x;
+        this.textObject.y = this.y;
         if (this.textProgress < this.text.length) {
-            if (this.progressReached != Math.floor(this.textProgress)) {
-                this.actualText = this.actualText.concat(this.text[Math.floor(this.textProgress)]);
+            if (this.progressReached !== Math.floor(this.textProgress)) {
+                this.actualText += this.text[Math.floor(this.textProgress)];
                 this.progressReached = Math.floor(this.textProgress);
+                this.textObject.text = this.wrapText(this.actualText);
             }
             this.textProgress += dt * 20;
         }
     }
 
-    draw() {
-        this.ctx.textAlign = 'left';
-        this.ctx.textBaseline = 'top';
-        this.ctx.font = `${this.w*0.03}px undertale`;
-        this.ctx.fillStyle = 'white';
-
-        const words = this.actualText.split(' ');
+    wrapText(text) {
+        const words = text.split(' ');
         let line = '';
-        let y = this.y;
-        const lineHeight = this.w * 0.04;
+        let result = '';
 
-        for (let n = 0; n < words.length; n++) {
-            let testLine = line + words[n] + ' ';
-            let metrics = this.ctx.measureText(testLine);
-            let testWidth = metrics.width;
-            if (testWidth > this.width && n > 0) {
-                this.ctx.fillText(line, this.x, y);
-                line = words[n] + ' ';
-                y += lineHeight;
+        for (let i = 0; i < words.length; i++) {
+            let testLine = line + words[i] + ' ';
+            this.textObject.text = testLine;
+            const testWidth = this.textObject.width;
+
+            if (testWidth > this.width && i > 0) {
+                result += line + '\n';
+                line = words[i] + ' ';
             } else {
                 line = testLine;
             }
         }
-        this.ctx.fillText(line, this.x, y);
+
+        result += line;
+        return result;
     }
 }

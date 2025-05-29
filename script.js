@@ -53,9 +53,9 @@ await startMod(0)
 
 let character = await loadCharacter(GLOBAL.characters[0]);
 
-const totskiy_face = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/face.png`, width * 0.07, null, character.parts.face.offsetX * width, character.parts.face.offsetY * height);
-const totskiy_body = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/body.png`, width * 0.1, null, character.parts.body.offsetX * width, character.parts.body.offsetY * height);
-const totskiy_legs = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/legs.png`, width * 0.1, null, character.parts.legs.offsetX * width, character.parts.legs.offsetY * height);
+const totskiy_face = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/face.png`, width * 0.07, null, character.parts.face.offsetX * width, (1-character.parts.face.offsetY-0.8) * height);
+const totskiy_body = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/body.png`, width * 0.1, null, character.parts.body.offsetX * width, (1-character.parts.body.offsetY-0.8) * height);
+const totskiy_legs = new Sprite(app, `/mods/${mod.name}/characters/${GLOBAL.characters[0]}/legs.png`, width * 0.1, null, character.parts.legs.offsetX * width, (1-character.parts.legs.offsetY-0.8) * height);
 
 var totskiy = new Character(app, canvas, totskiy_face, totskiy_body, totskiy_legs, width * 0.1, height * 0.1, width / 2, height * 0.08);
 
@@ -206,16 +206,11 @@ function update(currentTime) {
     });
 
     totskiy.update(dt);
-    /*totskiy.draw();*/
 
     fight_button.update(dt);
     act_button.update(dt);
     item_button.update(dt);
     mercy_button.update(dt);
-    fight_button.draw();
-    act_button.draw();
-    item_button.draw();
-    mercy_button.draw();
 
     hp_bar.value = soul.hp / 20;
     hp_bar.update(dt);
@@ -232,7 +227,6 @@ function update(currentTime) {
     dialog.x = width * 0.5 - dialog.width / 2 + field.offsetX;
     dialog.y = height * 0.5 - dialog.height / 2 + field.offsetY;
     dialog.update(dt);
-    /*dialog.draw();*/
 
     to_update.forEach((item) => {
         item.update(dt);
