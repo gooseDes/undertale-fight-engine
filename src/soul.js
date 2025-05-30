@@ -19,6 +19,8 @@ function isCollidingWithRotatedRect(soul, enemy) {
     return distSq < radius * radius;
 }
 
+import { spiltFilter } from "./global.js";
+
 export class Soul {
     constructor(app, canvas, keys, joystick, field) {
         this.app = app;
@@ -209,6 +211,9 @@ export class Soul {
                         console.log('Collision detected!');
                         const damage = dt * 20 * enemy.damage * enemy.opacity;
                         this.hp -= damage;
+                        spiltFilter.red = [-damage*this.w*0.08, 0]
+                        spiltFilter.blue = [damage*this.w*0.08, 0]
+
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();

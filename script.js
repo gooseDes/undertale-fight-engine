@@ -3,7 +3,7 @@ import { Character } from "/src/character.js";
 import { DialogText } from "/src/dialog_text.js";
 import { Enemy } from "/src/enemies/enemy.js";
 import { Field } from "/src/field.js";
-import { to_draw, to_update, lua_runtime, global, startMod, loadCharacter, mod, app } from "/src/global.js";
+import { to_draw, to_update, lua_runtime, global, startMod, loadCharacter, mod, app, spiltFilter } from "/src/global.js";
 import * as GLOBAL from "/src/global.js";
 import { Particle } from "/src/particle.js";
 import { ProgressBar } from "/src/engine/progress_bar.js";
@@ -198,6 +198,13 @@ function update(currentTime) {
     requestAnimationFrame(update);
 
     if (!dt) return;
+
+    spiltFilter.red.x += (0 - spiltFilter.red.x) * dt * 3;
+    spiltFilter.red.y += (0 - spiltFilter.red.y) * dt * 3;
+    spiltFilter.green.x += (0 - spiltFilter.green.x) * dt * 3;
+    spiltFilter.green.y += (0 - spiltFilter.green.y) * dt * 3;
+    spiltFilter.blue.x += (0 - spiltFilter.blue.x) * dt * 3;
+    spiltFilter.blue.y += (0 - spiltFilter.blue.y) * dt * 3;
 
     particles.forEach((particle) => {
         particle.update(dt);
