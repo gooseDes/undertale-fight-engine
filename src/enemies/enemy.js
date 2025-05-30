@@ -1,8 +1,9 @@
 import { to_draw, to_update } from "/src/global.js";
 
 export class Enemy {
-    constructor(app, type, x, y, width, height) {
+    constructor(app, canvas, type, x, y, width, height) {
         this.app = app;
+        this.canvas = canvas;
         this.type = type;
         this.x = x;
         this.y = y;

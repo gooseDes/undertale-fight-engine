@@ -139,7 +139,7 @@ export class Field {
                     if (!any_on_screen && this.enemiesWasOnScreen && this.sinceDodgingStarted > 1) {
                         this.action = 0;
                         this.soul.state = 'action_selection';
-                        this.enemies = [];
+                        this.clear();
                     }
                     if (this.autoCurrentOffsetControl) {
                         this.currentOffsetX += (this.offsetX - this.currentOffsetX) * dt * 8;
@@ -168,5 +168,11 @@ export class Field {
         this.graphics.clear();
         this.graphics.rect(this.w*0.5 - this.actualWidth*0.5 + this.currentOffsetX, this.h*0.5 - this.actualHeight*0.5 + this.currentOffsetY, this.actualWidth, this.actualHeight);
         this.graphics.stroke({ width: this.lineWidth, color: 0xffffff })
+    }
+
+    clear() {
+        this.enemies.forEach((enemy) => {
+            enemy.destroy();
+        })
     }
 }

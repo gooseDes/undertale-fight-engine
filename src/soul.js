@@ -53,7 +53,7 @@ export class Soul {
                 y: this.y,
                 width: this.width,
                 height: this.height,
-                opacity: 0.1 - (i / this.shadowsAmount) * 0.1
+                opacity: 0.2 - (i / this.shadowsAmount) * 0.2
             });
         }
 
@@ -209,14 +209,12 @@ export class Soul {
                         console.log('Collision detected!');
                         const damage = dt * 20 * enemy.damage * enemy.opacity;
                         this.hp -= damage;
-                        this.ctx.setChromaticAberration(true, damage);
                         document.getElementById('hp-bar').textContent = Math.ceil(this.hp);
                         if (this.hp <= 0) {
                             this.kill();
                         }
                     }
                 });
-                
 
                 const rightBound = this.w / 2 + this.field.width / 2 - this.width + this.field.currentOffsetX;
                 const bottomBound = this.h / 2 + this.field.height / 2 - this.height + this.field.currentOffsetY;

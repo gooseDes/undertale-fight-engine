@@ -1,49 +1,60 @@
 import { Enemy } from "/src/enemies/enemy.js";
-import { to_draw, to_update } from "/src/global.js";
 
 export class Blaster extends Enemy {
-    constructor(canvas, ctx, type) {
-        super(canvas, ctx, type, 0, 0, 0, 0);
+    constructor(app, canvas, type) {
+        super(app, canvas, type, 0, 0, 0, 0);
         this.attackPlaceX = 0;
         this.attackPlaceY = 0;
         this.attackPlaceWidth = 0;
         this.attackPlaceDirection = 0;
         this.isShooted = false;
         this.opacity = 1;
-        this.image = new Image()
-        this.image.src = "assets/images/blaster.png";
         this.damage = 0.1;
+        this.load();
+    }
+
+    async load() {
+        const texture = await PIXI.Assets.load("assets/images/blaster.png");
+        this.sprite = new PIXI.Sprite(texture);
+        this.sprite.anchor.set(0.5);
+        this.sprite.rotation = 0;
+        this.sprite.width *= 2;
+        this.sprite.height *= 2;
+        this.sprite.alpha = this.opacity;
+        this.app.stage.addChild(this.sprite);
     }
 
     setAttackPlace(x, y, width, direction) {
         this.attackPlaceX = x;
         this.attackPlaceY = y;
         this.attackPlaceWidth = width;
-        this.attackPlaceDirection = direction;
+        this.attackPlaceDirection = direction-Math.PI*0.5;
     }
 
     shoot(dt) {
         const enemy = new Enemy(
+            this.app,
             this.canvas,
-            this.ctx,
             'blaster',
             this.attackPlaceX,
-            this.attackPlaceY - this.height / 2,
-            this.height,
+            this.attackPlaceY - this.sprite.height / 2,
+            this.sprite.height,
             this.attackPlaceWidth
         );
-        enemy.angle = this.angle;
+        enemy.angle = this.angle+Math.PI*0.5;
         this.field.addEnemy(enemy);
         enemy.update(dt);
-        enemy.draw();
+        if (enemy.draw) enemy.draw();
         this.isShooted = true;
         this.isStarted = false;
         this.isStartingStarted = false;
     }
 
     update(dt) {
-        this.x += (this.attackPlaceX - this.x) * dt * 8;
-        this.y += (this.attackPlaceY - this.y) * dt * 8;
+        if (!this.sprite) return;
+        this.sprite.x += (this.attackPlaceX - this.sprite.x) * dt * 8;
+        this.sprite.y += (this.attackPlaceY - this.sprite.y) * dt * 8;
+
         if (this.oldFieldOffsetX != this.field.currentOffsetX) {
             this.attackPlaceX += this.field.currentOffsetX - this.oldFieldOffsetX;
         }
@@ -54,53 +65,44 @@ export class Blaster extends Enemy {
         this.oldFieldOffsetX = this.field.currentOffsetX;
         this.oldFieldOffsetY = this.field.currentOffsetY;
 
-        this.width += (this.attackPlaceWidth - this.width) * dt * 8;
-        this.height = this.width;
+        const newSize = this.attackPlaceWidth;
+        const currentSize = this.sprite.width;
+        const sizeLerp = currentSize + (newSize - currentSize) * dt * 8;
+        this.sprite.width = sizeLerp;
+        this.sprite.height = sizeLerp;
 
-        this.angle += (this.attackPlaceDirection - this.angle) * dt * 8;
+        this.sprite.rotation += (this.attackPlaceDirection - this.sprite.rotation) * dt * 8;
 
         if (
-            Math.abs(this.angle - this.attackPlaceDirection) < 0.1 &&
-            Math.abs(this.x - this.attackPlaceX) < this.w*0.01 &&
-            Math.abs(this.y - this.attackPlaceY) < this.w*0.01 &&
-            Math.abs(this.width - this.attackPlaceWidth) < this.w*0.01
+            Math.abs(this.sprite.rotation - this.attackPlaceDirection) < 0.1 &&
+            Math.abs(this.sprite.x - this.attackPlaceX) < this.app.renderer.width * 0.01 &&
+            Math.abs(this.sprite.y - this.attackPlaceY) < this.app.renderer.width * 0.01 &&
+            Math.abs(this.sprite.width - this.attackPlaceWidth) < this.app.renderer.width * 0.01
         ) {
-            this.isStartingStarted = true;
-            setTimeout(() => {
-                this.isStarted = true;
-            }, 500);
+            if (!this.isStartingStarted) {
+                this.isStartingStarted = true;
+                setTimeout(() => {
+                    this.isStarted = true;
+                }, 500);
+            }
+
             if (this.isStarted) {
                 this.opacity -= dt;
+                this.sprite.alpha = this.opacity;
+
+                if (!this.isShooted) this.shoot(dt);
+
                 if (this.opacity < 0) {
-                    to_update.splice(to_update.indexOf(this), 1);
-                    to_draw.splice(to_draw.indexOf(this), 1);
-                    this.field.enemies.splice(this.field.enemies.indexOf(this), 1);
-                }
-                if (!this.isShooted) {
-                    this.shoot(dt);
+                    this.destroy();
                 }
             }
         }
     }
 
-    draw() {
-        this.ctx.save();
-        this.ctx.translate(this.x, this.y);
-        this.ctx.rotate(this.angle);
-        
-        this.ctx.save();
-        this.ctx.globalAlpha = this.opacity;
-        this.ctx.rotate(-Math.PI / 2);
-        
-        this.ctx.drawImage(
-            this.image,
-            -this.width * 0.75,
-            -this.height / 2,
-            this.width * 1.5,
-            this.height * 1.7
-        );
-        
-        this.ctx.restore();
-        this.ctx.restore();        
+    draw() {}
+
+    destroy() {
+        super.destroy();
+        this.app.stage.removeChild(this.sprite);
     }
 }

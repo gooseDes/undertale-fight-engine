@@ -44,7 +44,7 @@ export class Sprite {
 
     update(dt) {
         if (!this.sprite) return;
-        //this.actualOpacity += (this.opacity - this.actualOpacity) * dt * 8;
+        this.actualOpacity += (this.opacity - this.actualOpacity) * dt * 8;
         this.sprite.x = this.x;
         this.sprite.y = this.y;
         this.sprite.alpha = this.actualOpacity;

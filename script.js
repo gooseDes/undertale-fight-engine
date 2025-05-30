@@ -16,6 +16,7 @@ const width = content.clientWidth;
 const height = content.clientHeight;
 
 await app.init({ antialias: true, resizeTo: content, backgroundAlpha: 0 })
+app.renderer.clearBeforeRender = true;
 const canvas = app.canvas;
 canvas.id = 'canvas';
 content.appendChild(canvas);
@@ -198,8 +199,6 @@ function update(currentTime) {
 
     if (!dt) return;
 
-    //ctx.aberrationStrength += (0 - ctx.aberrationStrength) * dt * 2;
-
     particles.forEach((particle) => {
         particle.update(dt);
         particle.draw();
@@ -232,9 +231,9 @@ function update(currentTime) {
         item.update(dt);
     });
 
-    /*to_draw.forEach((item) => {
+    to_draw.forEach((item) => {
         item.draw();
-    });*/
+    });
 
     totskiy.x = width * 0.5 + field.currentOffsetX;
     totskiy.y = height * 0.15 + field.currentOffsetY - field.actualHeight * 0.5;

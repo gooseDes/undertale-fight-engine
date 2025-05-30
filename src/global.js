@@ -8,6 +8,11 @@ export var mod = { id: 0, name: '' };
 export const characters = [];
 export var global = {};
 export const app = new PIXI.Application();
+export const spiltFilter = new PIXI.filters.RGBSplitFilter();
+spiltFilter.red = [0, 0];
+spiltFilter.green = [0, 0];
+spiltFilter.blue = [0, 0];
+app.stage.filters = [spiltFilter];
 
 export async function startMod(id) {
     // load mod
