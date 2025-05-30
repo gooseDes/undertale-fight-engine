@@ -3,9 +3,9 @@ import { to_draw, to_update } from "/src/global.js";
 import { SplashText } from "/src/splash_text.js";
 
 export class Character {
-    constructor(canvas, ctx, face, body, legs, width, height, x, y) {
+    constructor(app, canvas, face, body, legs, width, height, x, y) {
+        this.app = app;
         this.canvas = canvas;
-        this.ctx = ctx;
         this.w = canvas.clientWidth;
         this.h = canvas.clientHeight;
         this.face = face;
@@ -24,7 +24,7 @@ export class Character {
     }
 
     damage() {
-        const splash = new SplashText(this.canvas, this.ctx, this.w, this.h, this.x, this.y + this.height);
+        const splash = new SplashText(this.app, this.canvas, this.w, this.h, this.x, this.y + this.height);
         splash.text = missMessages[Math.floor(Math.random() * missMessages.length)];
         to_update.push(splash);
         to_draw.push(splash);
@@ -37,6 +37,9 @@ export class Character {
         this.face.y = this.y + Math.cos(performance.now() * 0.002) * this.h * 0.005 + this.faceOffsetY;
         this.body.y = this.y + this.face.height + this.bodyOffsetY;
         this.legs.y = this.y + this.face.height + this.legs.height + this.legsOffsetY;
+        this.face.update(dt);
+        this.body.update(dt);
+        this.legs.update(dt);
     }
 
     draw() {
