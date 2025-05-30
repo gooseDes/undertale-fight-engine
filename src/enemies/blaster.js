@@ -41,7 +41,7 @@ export class Blaster extends Enemy {
             this.sprite.height,
             this.attackPlaceWidth
         );
-        enemy.angle = this.angle+Math.PI*0.5;
+        enemy.angle = this.sprite.rotation+Math.PI*0.5;
         this.field.addEnemy(enemy);
         enemy.update(dt);
         if (enemy.draw) enemy.draw();
